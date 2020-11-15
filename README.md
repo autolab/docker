@@ -1,4 +1,5 @@
 # Autolab Docker Deployment
+The Autolab Docker Compose installation method is the fastest and easiest way to get a production-ready deployment of Autolab running. Please refer to our [docs](https://docs.autolabproject.com/docker-compose/) for the most updated instructions on the installation process.
 
 ## Setup Instructions
 First ensure that you have Docker installed on your machine.
