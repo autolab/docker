@@ -14,6 +14,12 @@ setup-autolab-configs:
 	# Replace the Devise secret key with a random string
 	@echo "Setting random Devise secret"
 	sed -i.bak "s/<YOUR-SECRET-KEY>/`LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 128`/g" ./Autolab/config/initializers/devise.rb && rm ./Autolab/config/initializers/devise.rb.bak
+    # Replace database credentials with the ones set by user in docker-compose
+	@echo "Setting database username"
+	sed -i.bak "s/<MYSQL_USERNAME>/`sed -n -e '/MYSQL_USER/ s/.*\= *//p' docker-compose.yml`/g" ./Autolab/config/database.yml && rm ./Autolab/config/database.yml.bak
+
+	@echo "Setting database password"
+	sed -i.bak "s/<MYSQL_PASSWORD>/`sed -n -e '/MYSQL_PASSWORD/ s/.*\= *//p' docker-compose.yml`/g" ./Autolab/config/database.yml && rm ./Autolab/config/database.yml.bak
 
 	@echo "Creating default Autolab/config/environments/production.rb"
 	cp -n ./Autolab/config/environments/production.rb.template ./Autolab/config/environments/production.rb
