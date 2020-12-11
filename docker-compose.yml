@@ -20,10 +20,11 @@ services:
     environment:
       - DOCKER_DEPLOYMENT=prod
       - RESTFUL_KEY=REPLACE_ME_SECRET_TANGO_KEY
-      - DOCKER_VOLUME_PATH=/opt/TangoService/Tango/volumes
-      - DOCKER_TANGO_HOST_VOLUME_PATH=/home/ec2-user/autolab-docker/Tango/volumes
-      # do not modify
       - DOCKER_REDIS_HOSTNAME=redis
+      # Path to volumes within the Tango container. Does not need to be modified.
+      - DOCKER_VOLUME_PATH=/opt/TangoService/Tango/volumes
+      # Modify the below to be the path to volumes on your host machine
+      - DOCKER_TANGO_HOST_VOLUME_PATH=/home/ec2-user/autolab-docker/Tango/volumes
 
   autolab:
     container_name: autolab
