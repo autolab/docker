@@ -16,12 +16,15 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./Tango/config.py:/opt/TangoService/Tango/config.py
+      - ./Tango/volumes:/opt/TangoService/Tango/volumes
     environment:
       - DOCKER_DEPLOYMENT=prod
       - RESTFUL_KEY=REPLACE_ME_SECRET_TANGO_KEY
-      # do not modify
-      - DOCKER_VOLUME_PATH=/opt/TangoService/Tango/volumes/
       - DOCKER_REDIS_HOSTNAME=redis
+      # Path to volumes within the Tango container. Does not need to be modified.
+      - DOCKER_VOLUME_PATH=/opt/TangoService/Tango/volumes
+      # Modify the below to be the path to volumes on your host machine
+      - DOCKER_TANGO_HOST_VOLUME_PATH=/home/ec2-user/autolab-docker/Tango/volumes
 
   autolab:
     container_name: autolab
@@ -41,6 +44,7 @@ services:
       - ./Autolab/config/environments/production.rb:/home/app/webapp/config/environments/production.rb
       - ./Autolab/config/autogradeConfig.rb:/home/app/webapp/config/autogradeConfig.rb
       - ./Autolab/courses:/home/app/webapp/courses
+      - ./Autolab/assessmentConfig:/home/app/webapp/courses/assessmentConfig
       - ./ssl/certbot/conf:/etc/letsencrypt
       - ./ssl/certbot/www:/var/www/certbot
 
@@ -56,7 +60,7 @@ services:
       # - ./nginx/no-ssl-app.conf:/etc/nginx/sites-enabled/webapp.conf
 
     environment:
-      - DOCKER_SSL=true                         # set to false for no SSL (not recommended)
+      - DOCKER_SSL=true # set to false for no SSL (not recommended)
       - RESTFUL_HOST=tango
       - RESTFUL_PORT=3000
       - RESTFUL_KEY=REPLACE_ME_SECRET_TANGO_KEY
@@ -83,3 +87,4 @@ services:
 
 volumes:
   mysql-db:
+
