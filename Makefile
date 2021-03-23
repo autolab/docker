@@ -46,7 +46,7 @@ set-perms:
 
 .PHONY: create-user
 create-user:
-	docker exec -it autolab bash /home/app/webapp/docker/initialize_user.sh
+	docker exec -it autolab bash /home/app/webapp/bin/initialize_user.sh
 
 .PHONY: ssl
 ssl:
