@@ -65,6 +65,17 @@ services:
       - RESTFUL_HOST=tango
       - RESTFUL_PORT=3000
       - RESTFUL_KEY=REPLACE_ME_SECRET_TANGO_KEY
+      # Edit the below to set SMTP Settings
+      - SMTP_SETTINGS_ADDRESS=smtp.example.com
+      - SMTP_SETTINGS_PORT=25
+      - SMTP_SETTINGS_ENABLE_STARTTLS_AUTO=true
+      - SMTP_SETTING_AUTHENTICATION=login
+      - SMTP_SETTINGS_USER_NAME=example
+      - SMTP_SETTINGS_PASSWORD=example
+      - SMTP_SETTINGS_DOMAIN=example.com
+      - SMTP_DEFAULT_FROM=from@example.com
+      - HOST_PROTOCOL=http
+      - HOST_DOMAIN=example.com
 
   mysql:
     container_name: mysql
