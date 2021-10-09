@@ -6,9 +6,9 @@ pipeline {
             steps {
                 echo 'Building..'
                 sh 'ls -al'
-                sh 'docker-compose build'
                 echo "$USER"
                 sh 'grep /etc/group -e "docker"'
+                sh 'docker-compose build'
             }
         }
         stage('Test') {
