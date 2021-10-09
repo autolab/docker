@@ -18,6 +18,9 @@ setup-autolab-configs:
 	@echo "Creating default Autolab/config/environments/production.rb"
 	cp -n ./Autolab/config/environments/production.rb.template ./Autolab/config/environments/production.rb
 
+	@echo "Creating default .env"
+	cp -n ./.env.template ./.env
+
 	@echo "Creating default Autolab/config/autogradeConfig.rb"
 	cp -n ./Autolab/config/autogradeConfig.rb.template ./Autolab/config/autogradeConfig.rb
 
