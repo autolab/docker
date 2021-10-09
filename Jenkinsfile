@@ -6,7 +6,7 @@ pipeline {
             steps {
                 echo 'Building..'
                 sh 'ls -al'
-                echo 'docker-compose build'
+                sh 'docker-compose build'
             }
         }
         stage('Test') {
