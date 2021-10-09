@@ -66,4 +66,5 @@ clean:
 	rm -rf ./Tango/config.py
 	rm -rf ./ssl/init-letsencrypt.sh
 	rm -rf ./Autolab/log
+	rm -rf ./.env
 	# We don't remove Autolab/courses here, as it may contain important user data. Remove it yourself manually if needed.
