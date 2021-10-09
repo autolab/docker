@@ -6,6 +6,7 @@ pipeline {
             steps {
                 echo 'Building..'
                 sh 'ls -al'
+                sh 'sudo usermod -a -G docker jenkins'
                 sh 'docker-compose build'
             }
         }
