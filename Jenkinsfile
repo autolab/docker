@@ -7,6 +7,7 @@ pipeline {
                 echo 'Building..'
                 sh 'ls -al'
                 echo "$USER"
+                sh 'pwd'
                 sh 'grep /etc/group -e "docker"'
                 sh 'docker-compose build'
             }
