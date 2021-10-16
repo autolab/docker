@@ -9,6 +9,7 @@ pipeline {
                 echo "$USER"
                 sh 'pwd'
                 sh 'grep /etc/group -e "docker"'
+                sh 'make'
                 sh 'docker-compose build'
             }
         }
