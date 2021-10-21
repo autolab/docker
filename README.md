@@ -14,3 +14,5 @@ Please refer to our official [Autolab docs](https://docs.autolabproject.com/inst
 
 If you are stuck or find issues with the installation process please join our Slack [here](https://autolab-slack.herokuapp.com/) and let us know and we will try our best to help. 
 
+## Troubleshooting and Upgrade Information
+You can find common errors and upgrade-specific changes [on our documentation here](https://docs.autolabproject.com/installation/docker-compose/#troubleshooting)
