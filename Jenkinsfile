@@ -8,7 +8,8 @@ pipeline {
                 sh 'ls -al'
                 echo "user is: $USER"
                 sh 'pwd'
-                sh 'cd Autolab && git rebase origin demosite-patches && cd ..'
+                // comment out rebasing for now because we need to set up git credentials
+              	// sh 'cd Autolab && git rebase origin demosite-patches && cd ..'
                 sh 'grep /etc/group -e "docker"'
                 sh 'make'
                 sh 'docker-compose build'
