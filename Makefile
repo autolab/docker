@@ -58,7 +58,7 @@ create-user:
 
 .PHONY: ci-create-user
 ci-create-user:
-    docker exec -it autolab_ci bash /home/app/webapp/bin/initialize_user.sh
+	docker exec -it autolab_ci bash /home/app/webapp/bin/initialize_user.sh
 
 .PHONY: ssl
 ssl:
