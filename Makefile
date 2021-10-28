@@ -64,6 +64,10 @@ ci-create-user:
 ssl:
 	cp -n ./ssl/init-letsencrypt.sh.template ./ssl/init-letsencrypt.sh
 
+.PHONY: ci-ssl
+ci-ssl:
+	cp -n ./ssl/init-letsencrypt-ci.sh.template ./ssl/init-letsencrypt.sh
+
 
 .PHONY: clean
 clean:

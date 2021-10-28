@@ -22,6 +22,7 @@ pipeline {
                 sh 'docker-compose stop'
                 // configure SSL
                 sh 'make ssl'
+                sh 'python3 ci_script.py -v ./ssl/init-letsencrypt.sh'
             }
         }
         stage('Test') {
