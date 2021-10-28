@@ -10,7 +10,7 @@ pipeline {
                 sh 'pwd'
                 // comment out rebasing for now because we need to set up git credentials
                 // need to restore the schema.db which is changed from the previous deployment
-              	sh 'cd Autolab && sudo chown $USER db/schema.rb && git restore db/schema.rb && git rebase origin demosite-patches && cd ..'
+              	sh 'cd Autolab && sudo chown $USER db/schema.rb && sudo git restore db/schema.rb && git rebase origin demosite-patches && cd ..'
                 sh 'grep /etc/group -e "docker"'
                 sh 'make clean && make'
                 sh 'docker stop autolab_ci|| true && docker rm autolab_ci || true'
