@@ -1,18 +1,18 @@
 version: "3.3"
 services:
   redis:
-    container_name: redis 
+    container_name: redis_ci
     image: redis:latest
     deploy:
       replicas: 1
   tango:
-    container_name: tango
+    container_name: tango_ci
     ports:
       - '3000:3000'
     build: 
       context: ./Tango
     depends_on:
-      - "redis"
+      - redis_ci
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./Tango/config.py:/opt/TangoService/Tango/config.py
@@ -27,10 +27,10 @@ services:
       - DOCKER_TANGO_HOST_VOLUME_PATH=/home/ec2-user/autolab-docker/Tango/volumes
 
   autolab:
-    container_name: autolab
+    container_name: autolab_ci
     depends_on:
-      - mysql
-      - certbot
+      - mysql_ci
+      - certbot_ci
     ports:
       - '80:80'
       - '443:443'
@@ -67,7 +67,7 @@ services:
       - RESTFUL_KEY=REPLACE_ME_SECRET_TANGO_KEY
 
   mysql:
-    container_name: mysql
+    container_name: mysql_ci
     image: mysql/mysql-server:latest
     environment:
       - MYSQL_DATABASE=autolab_development
@@ -80,7 +80,7 @@ services:
       - mysql-db:/var/lib/mysql
 
   certbot:
-    container_name: certbot
+    container_name: certbot_ci
     image: certbot/certbot
     volumes:
       - ./ssl/certbot/conf:/etc/letsencrypt
