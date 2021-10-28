@@ -9,7 +9,7 @@ pipeline {
                 echo "user is: $USER"
                 sh 'pwd'
                 // comment out rebasing for now because we need to set up git credentials
-              	sh 'cd Autolab && git rebase origin demosite-patches && cd ..'
+              	sh 'cd Autolab && git rebase origin demosite-patches --autostash && cd ..'
                 sh 'grep /etc/group -e "docker"'
                 sh 'make clean && make'
                 sh 'docker stop rabbitmq || true && docker rm rabbitmq || true'
