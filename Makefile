@@ -35,7 +35,7 @@ db-migrate:
 
 .PHONY: ci-db-migrate
 ci-db-migrate:
-	docker exec -it autolab_ci bash /home/app/webapp/docker/db_migrate.sh
+	docker exec autolab_ci bash /home/app/webapp/docker/db_migrate.sh
 
 .PHONY: update
 update:
@@ -50,15 +50,15 @@ set-perms:
 
 .PHONY: ci-set-perms
 ci-set-perms:
-	docker exec -it autolab_ci chown -R app:app /home/app/webapp
+	docker exec autolab_ci chown -R app:app /home/app/webapp
 
 .PHONY: create-user
 create-user:
-	docker exec -it autolab_ci bash /home/app/webapp/bin/initialize_user.sh
+	docker exec -it autolab bash /home/app/webapp/bin/initialize_user.sh
 
 .PHONY: ci-create-user
 ci-create-user:
-	docker exec -it autolab_ci bash /home/app/webapp/bin/initialize_user.sh
+	docker exec autolab_ci bash /home/app/webapp/bin/initialize_user.sh
 
 .PHONY: ssl
 ssl:
