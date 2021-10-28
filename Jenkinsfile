@@ -9,7 +9,7 @@ pipeline {
                 echo "user is: $USER"
                 sh 'pwd'
                 // comment out rebasing for now because we need to set up git credentials
-              	// sh 'cd Autolab && git rebase origin demosite-patches && cd ..'
+              	sh 'cd Autolab && git rebase origin demosite-patches && cd ..'
                 sh 'grep /etc/group -e "docker"'
                 sh 'make'
                 sh 'docker-compose build'
