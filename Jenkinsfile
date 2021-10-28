@@ -9,7 +9,7 @@ pipeline {
                 echo "user is: $USER"
                 sh 'pwd'
                 // comment out rebasing for now because we need to set up git credentials
-              	sh 'cd Autolab && git rebase origin demosite-patches --autostash && cd ..'
+              	sh 'cd Autolab && git restore . && git rebase origin demosite-patches && cd ..'
                 sh 'grep /etc/group -e "docker"'
                 sh 'make clean && make'
                 sh 'docker stop rabbitmq || true && docker rm rabbitmq || true'
@@ -22,7 +22,7 @@ pipeline {
                 sh 'docker-compose stop'
                 // configure SSL
                 sh 'make ssl'
-                sh 'python3 ci_script.py -v ./ssl/init-letsencrypt.sh'
+                sh 'python3 ci_script.py -s ./ssl/init-letsencrypt.sh'
             }
         }
         stage('Test') {
