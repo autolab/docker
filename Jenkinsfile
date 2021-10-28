@@ -22,6 +22,8 @@ pipeline {
                 sh 'pwd'
                 // comment out rebasing for now because we need to set up git credentials
                 // need to restore the schema.db which is changed from the previous deployment
+                sh 'git config --global user.email "autolab.bot@gmail.com"'
+                sh 'git config --global user.name "jenkinsBot"'
               	sh 'cd Autolab && sudo chown $USER db/schema.rb && sudo git restore db/schema.rb && git rebase origin/demosite-patches && cd ..'
                 sh 'grep /etc/group -e "docker"'
                 sh 'make clean && make'
