@@ -15,8 +15,8 @@ pipeline {
                 sh 'docker stop rabbitmq || true && docker rm rabbitmq || true'
                 sh 'docker-compose build'
                 sh 'docker-compose up -d'
-                sh 'make set-perms'
-                sh 'make db-migrate'
+                sh 'make ci-set-perms'
+                sh 'make ci-db-migrate'
                 // change the Tango volume path
                 sh 'python3 ci_script.py -v ./docker-compose.yml'
                 sh 'docker-compose stop'
