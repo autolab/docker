@@ -10,6 +10,7 @@ DEFAULT_VOLUME_PATH = (
 )
 DEFAULT_DOMAINS = "domains=(example.com)"
 DEPLOYMENT_SITE_NAME = "nightly.autolabproject.com"
+NGINX_APP_CONFIG_DEFAULT_DOMAIN = "<REPLACE_WITH_YOUR_DOMAIN>"
 
 def replace_exp(file, search_exp, replace_exp):
     success = False
@@ -23,7 +24,7 @@ def replace_exp(file, search_exp, replace_exp):
 
 if __name__ == "__main__":
     arg_list = sys.argv[1:]
-    options = "v:s:"
+    options = "v:s:a:"
     dir_path = os.path.dirname(os.path.realpath(__file__))
     try:
         arguments, values = getopt.getopt(arg_list, options)
@@ -45,7 +46,7 @@ if __name__ == "__main__":
                         f"did not find a matching string {DEFAULT_VOLUME_PATH} in {file_name}."
                     )
 
-            elif arg == "-s":
+            elif arg == "-s": # script is run for changing the ssl domain name
                 domains = f"domains=({DEPLOYMENT_SITE_NAME})"
                 replaced = replace_exp(
                     file_name, DEFAULT_DOMAINS, domains
@@ -53,6 +54,17 @@ if __name__ == "__main__":
                 if replaced:
                     print(
                         f"changed domains from {DEFAULT_DOMAINS} to {domains} in {file_name}."
+                    )
+                else:
+                    print(
+                        f"did not find a matching string {DEFAULT_DOMAINS} in {file_name}."
+                    )
+            elif arg == "-a":
+                domain_name = DEPLOYMENT_SITE_NAME
+                replaced = replace_exp(file_name, NGINX_APP_CONFIG_DEFAULT_DOMAIN, domain_name)
+                if replaced:
+                    print(
+                        f"changed domains from {DEFAULT_DOMAINS} to {domain_name} in {file_name}."
                     )
                 else:
                     print(
