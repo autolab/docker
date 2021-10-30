@@ -39,7 +39,7 @@ pipeline {
                 sh 'make ci-set-perms'
                 sh 'make ci-db-migrate'
                 // change the Tango volume path
-                sh 'python3 ci_script.py -v ./docker-compose.yml'
+                sh 'python3 ci_script.py -v .env'
                 sh 'docker-compose stop'
                 // configure SSL
                 sh "python3 ci_script.py -a nginx/app.conf"
