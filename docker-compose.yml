@@ -9,10 +9,10 @@ services:
     container_name: tango_ci
     ports:
       - '3000:3000'
-    build: 
+    build:
       context: ./Tango
     depends_on:
-      - redis_ci
+      - redis
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./Tango/config.py:/opt/TangoService/Tango/config.py
@@ -29,8 +29,8 @@ services:
   autolab:
     container_name: autolab_ci
     depends_on:
-      - mysql_ci
-      - certbot_ci
+      - mysql
+      - certbot
     ports:
       - '80:80'
       - '443:443'
@@ -98,4 +98,3 @@ services:
 
 volumes:
   mysql-db:
-
