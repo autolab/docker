@@ -57,8 +57,6 @@ pipeline {
                 sh "docker build -t autograding_image Tango/vmms/"
                 // bring everything up!
                 sh "docker-compose up -d"
-                sh "POSTDATA={'text':'Hello, World!'}"
-                sh "curl -X POST -H 'Content-type: application/json' --data $POSTDATA htt"
             }
         }
     }
