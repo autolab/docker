@@ -45,6 +45,8 @@ pipeline {
                 sh "python3 ci_script.py -a nginx/app.conf"
                 sh 'make ssl'
                 sh 'python3 ci_script.py -s ./ssl/init-letsencrypt.sh'
+                // nuke any previous certificates
+                sh 'rm -rf /var/lib/jenkins/workspace/autolab-demo-test/ssl/certbot/conf/live/nightly.autolabproject.com*'
                 sh "echo 'n' | echo 'y' | sudo sh ./ssl/init-letsencrypt.sh"
             }
         }
@@ -55,6 +57,7 @@ pipeline {
                 sh "docker build -t autograding_image Tango/vmms/"
                 // bring everything up!
                 sh "docker-compose up -d"
+                sh "curl -X POST -H 'Content-type: application/json' --data '{"text":"nightly.autolabproject.com deployed successfully."}' htt"
             }
         }
     }
