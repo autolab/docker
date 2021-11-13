@@ -44,7 +44,7 @@ pipeline {
                 sh 'make ci-set-perms'
                 sh 'make ci-db-migrate'
                 // create initial user
-                sh 'docker exec autolab_ci bash env RAILS_ENV=production bundle exec rails admin:create_root_user[admin@demo.bar,"adminfoobar","Admin","Foo"] || true'
+                sh 'docker exec autolab_ci env RAILS_ENV=production bundle exec rails admin:create_root_user[admin@demo.bar,"adminfoobar","Admin","Foo"] || true'
                 // change the Tango volume path
                 sh 'python3 ci_script.py -v .env'
                 sh 'docker-compose stop'
