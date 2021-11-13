@@ -9,6 +9,8 @@ Prerequisites for the host machine:
   ssl requires sudo access.
   Add `jenkins ALL=(ALL) NOPASSWD: ALL` to `/etc/sudoers`.
 
+- Make sure that the host machine has credentials (autolab.bot) to pull and rebase the latest Autolab repos.
+
 */
 
 pipeline {
@@ -48,7 +50,8 @@ pipeline {
                 sh "python3 ci_script.py -a nginx/app.conf"
                 sh 'make ssl'
                 sh 'python3 ci_script.py -s ./ssl/init-letsencrypt.sh'
-                sh "echo 'n' | echo 'y' | sudo sh ./ssl/init-letsencrypt.sh"
+                // do not replace existing certificate
+                sh "echo 'n' | echo 'N' | sudo sh ./ssl/init-letsencrypt.sh"
             }
         }
         stage('Deploy') {
