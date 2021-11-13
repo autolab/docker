@@ -32,8 +32,8 @@ pipeline {
                 // nuke any previous certificates, typically not necessary
                 // openSSL only allows 5 new certificates for a domain in a week
                 // sh 'sudo rm -rf /var/lib/jenkins/workspace/autolab-demo-test/ssl/certbot/conf/live/nightly.autolabproject.com*'
-                sh 'docker stop autolab_ci|| true && docker rm autolab_ci || true'
-                sh 'docker stop tango_ci|| true && docker rm tango_ci || true'
+                sh 'docker stop autolab_ci || true && docker rm autolab_ci || true'
+                sh 'docker stop tango_ci || true && docker rm tango_ci || true'
                 sh 'docker-compose build'
             }
         }
@@ -44,6 +44,7 @@ pipeline {
                 sh 'make ci-set-perms'
                 sh 'make ci-db-migrate'
                 // change the Tango volume path
+                sh 'docker exec -it autolab_ci bash env RAILS_ENV=production bundle exec rails admin:create_root_user[admin@demo.bar,"adminfoobar","Admin","Foo"] || true'
                 sh 'python3 ci_script.py -v .env'
                 sh 'docker-compose stop'
                 // configure SSL
