@@ -28,7 +28,7 @@ pipeline {
                 sh 'git config --global user.name "jenkinsBot"'
               	sh 'cd Autolab && sudo chown $USER db/schema.rb && sudo git restore db/schema.rb && git rebase origin/demosite-patches && cd ..'
                 sh 'grep /etc/group -e "docker"'
-                sh 'make clean && make update && make'
+                sh 'make clean && make'
                 // nuke any previous certificates, typically not necessary
                 // openSSL only allows 5 new certificates for a domain in a week
                 // sh 'sudo rm -rf /var/lib/jenkins/workspace/autolab-demo-test/ssl/certbot/conf/live/nightly.autolabproject.com*'
