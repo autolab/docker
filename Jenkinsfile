@@ -66,6 +66,9 @@ pipeline {
                 sh "docker build -t autograding_image Tango/vmms/"
                 // bring everything up!
                 sh "docker-compose up -d"
+                // report status to Slack
+                sh "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"New deployment to nightly.autolabproject.com! Use 'admin@demo.bar', adminfoobar' to log in. \"}' htt
+ps://hooks.slack.com/services/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"
             }
         }
     }
