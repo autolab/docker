@@ -28,7 +28,7 @@ pipeline {
                 sh 'git config --global user.name "jenkinsBot"'
               	sh 'cd Autolab && sudo chown $USER db/schema.rb && sudo git restore db/schema.rb && git rebase origin/demosite-patches && cd ..'
                 sh 'grep /etc/group -e "docker"'
-                sh 'make clean && make'
+                sh 'make clean && make update && make'
                 // nuke any previous certificates, typically not necessary
                 // openSSL only allows 5 new certificates for a domain in a week
                 // sh 'sudo rm -rf /var/lib/jenkins/workspace/autolab-demo-test/ssl/certbot/conf/live/nightly.autolabproject.com*'
@@ -68,17 +68,17 @@ pipeline {
                 sh "docker-compose up -d"
             }
         }
-        post {
-			always {
-				script {
-					if (currentBuild.currentResult == 'SUCCESS') {
-						sh "curl -X POST -H 'Content-type: application/json' --data '{text:New deployment to nightly.autolabproject.com! Use 'admin@demo.bar', adminfoobar' to log in. }' https://hooks.slack.com/services/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"
-					}
-					else {
-						sh "curl -X POST -H 'Content-type: application/json' --data '{text:Jenkins deployment failed. See http://jenkins.autolabproject.com:8090/job/autolab-demo-test/. }' https://hooks.slack.com/services/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"
-					}
-				}
-			}
-		}
+    }
+    post {
+        always {
+            script {
+                if (currentBuild.currentResult == 'SUCCESS') {
+                    sh "curl -X POST -H 'Content-type: application/json' --data '{text: New deployment to nightly.autolabproject.com! Use 'admin@demo.bar', adminfoobar' to log in. }' https://hooks.slack.com/services/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"
+                }
+                else {
+                    sh "curl -X POST -H 'Content-type: application/json' --data '{text: Jenkins deployment failed. See http://jenkins.autolabproject.com:8090/job/autolab-demo-test/. }' https://hooks.slack.com/services/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"
+                }
+            }
+        }
     }
 }
