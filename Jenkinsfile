@@ -35,6 +35,8 @@ pipeline {
                 sh 'docker stop autolab || true && docker rm autolab || true'
                 sh 'docker stop tango || true && docker rm tango || true'
                 sh 'docker stop redis || true && docker rm redis || true'
+                sh 'docker stop mysql || true && docker rm mysql || true'
+                sh 'docker stop certbot || true && docker rm certbot || true'
                 sh 'docker-compose build'
             }
         }
