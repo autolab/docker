@@ -32,8 +32,8 @@ pipeline {
                 // nuke any previous certificates, typically not necessary
                 // openSSL only allows 5 new certificates for a domain in a week
                 // sh 'sudo rm -rf /var/lib/jenkins/workspace/autolab-demo-test/ssl/certbot/conf/live/nightly.autolabproject.com*'
-                sh 'docker stop autolab_ci || true && docker rm autolab_ci || true'
-                sh 'docker stop tango_ci || true && docker rm tango_ci || true'
+                sh 'docker stop autolab || true && docker rm autolab || true'
+                sh 'docker stop tango || true && docker rm tango || true'
                 sh 'docker-compose build'
             }
         }
@@ -41,17 +41,17 @@ pipeline {
             steps {
                 echo 'Configuring SSL...'
                 sh 'docker-compose up -d'
-                sh 'make ci-set-perms'
-                sh 'make ci-db-migrate'
+                sh 'make set-perms'
+                sh 'make db-migrate'
                 // create initial user
-                sh 'docker exec autolab_ci env RAILS_ENV=production bundle exec rails admin:create_root_user[admin@demo.bar,"adminfoobar","Admin","Foo"] || true'
+                sh 'docker exec autolab env RAILS_ENV=production bundle exec rails admin:create_root_user[admin@demo.bar,"adminfoobar","Admin","Foo"] || true'
                 // change the Tango volume path
                 sh 'python3 ci_script.py -v .env'
                 sh 'docker-compose stop'
                 // configure SSL
-                sh "python3 ci_script.py -a nginx/app.conf"
+                sh "python3 script.py -a nginx/app.conf"
                 sh 'make ssl'
-                sh 'python3 ci_script.py -s ./ssl/init-letsencrypt.sh'
+                sh 'python3 script.py -s ./ssl/init-letsencrypt.sh'
                 // do not replace existing certificate
                 sh "echo 'n' | echo 'N' | sudo sh ./ssl/init-letsencrypt.sh"
             }

@@ -36,10 +36,6 @@ setup-tango-configs:
 db-migrate:
 	docker exec -it autolab bash /home/app/webapp/docker/db_migrate.sh
 
-.PHONY: ci-db-migrate
-ci-db-migrate:
-	docker exec autolab_ci bash /home/app/webapp/docker/db_migrate.sh
-
 .PHONY: update
 update:
 	cd ./Autolab && git checkout master && git pull origin master
@@ -51,25 +47,13 @@ update:
 set-perms:
 	docker exec -it autolab chown -R app:app /home/app/webapp
 
-.PHONY: ci-set-perms
-ci-set-perms:
-	docker exec autolab_ci chown -R app:app /home/app/webapp
-
 .PHONY: create-user
 create-user:
 	docker exec -it autolab bash /home/app/webapp/bin/initialize_user.sh
 
-.PHONY: ci-create-user
-ci-create-user:
-	docker exec autolab_ci bash /home/app/webapp/bin/initialize_user.sh
-
 .PHONY: ssl
 ssl:
 	cp -n ./ssl/init-letsencrypt.sh.template ./ssl/init-letsencrypt.sh
-
-.PHONY: ci-ssl
-ci-ssl:
-	cp -n ./ssl/init-letsencrypt-ci.sh.template ./ssl/init-letsencrypt.sh
 
 
 .PHONY: clean
