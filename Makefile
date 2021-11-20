@@ -34,7 +34,7 @@ setup-tango-configs:
 
 .PHONY: db-migrate
 db-migrate:
-	docker exec -it autolab bash /home/app/webapp/docker/db_migrate.sh
+	docker exec autolab bash /home/app/webapp/docker/db_migrate.sh
 
 .PHONY: update
 update:
