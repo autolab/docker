@@ -32,8 +32,9 @@ pipeline {
                 // nuke any previous certificates, typically not necessary
                 // openSSL only allows 5 new certificates for a domain in a week
                 // sh 'sudo rm -rf /var/lib/jenkins/workspace/autolab-demo-test/ssl/certbot/conf/live/nightly.autolabproject.com*'
-                sh 'docker stop autolab || true && docker rm autolab || true'
+                sh 'docker stop autolab || true && docker rm autolab || true && '
                 sh 'docker stop tango || true && docker rm tango || true'
+                sh 'docker stop redis || true && docker rm redis || true'
                 sh 'docker-compose build'
             }
         }
