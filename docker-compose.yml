@@ -40,7 +40,6 @@ services:
     volumes:
       - ./Autolab/db/:/home/app/webapp/db
       - ./Autolab/config/database.yml:/home/app/webapp/config/database.yml
-      - ./Autolab/config/initializers/devise.rb:/home/app/webapp/config/initializers/devise.rb
       - ./Autolab/config/environments/production.rb:/home/app/webapp/config/environments/production.rb
       - ./Autolab/config/autogradeConfig.rb:/home/app/webapp/config/autogradeConfig.rb
       - ./Autolab/courses:/home/app/webapp/courses
