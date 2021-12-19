@@ -21,9 +21,7 @@ services:
       - DOCKER_DEPLOYMENT
       - RESTFUL_KEY
       - DOCKER_REDIS_HOSTNAME
-      # Path to volumes within the Tango container. Does not need to be modified.
       - DOCKER_VOLUME_PATH
-      # Modify the below to be the path to volumes on your host machine
       - DOCKER_TANGO_HOST_VOLUME_PATH
 
   autolab:
@@ -40,7 +38,6 @@ services:
     volumes:
       - ./Autolab/db/:/home/app/webapp/db
       - ./Autolab/config/database.yml:/home/app/webapp/config/database.yml
-      - ./Autolab/config/initializers/devise.rb:/home/app/webapp/config/initializers/devise.rb
       - ./Autolab/config/environments/production.rb:/home/app/webapp/config/environments/production.rb
       - ./Autolab/config/autogradeConfig.rb:/home/app/webapp/config/autogradeConfig.rb
       - ./Autolab/courses:/home/app/webapp/courses
@@ -54,11 +51,7 @@ services:
       # - ./ssl/privkey.pem:/etc/letsencrypt/live/test.autolab.io/privkey.pem
       # - ./ssl/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem
 
-      # Comment the below out to disable SSL (not recommended)
-      - ./nginx/app.conf:/etc/nginx/sites-enabled/webapp.conf
-
-      # Uncomment the below to disable SSL (not recommended)
-      # - ./nginx/no-ssl-app.conf:/etc/nginx/sites-enabled/webapp.conf
+      - ${NGINX_CONFIG}:/etc/nginx/sites-enabled/webapp.conf
 
     environment:
       - DOCKER_SSL
