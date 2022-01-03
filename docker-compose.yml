@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   redis:
-    container_name: redis 
+    container_name: redis
     image: redis:latest
     deploy:
       replicas: 1
@@ -9,10 +9,10 @@ services:
     container_name: tango
     ports:
       - '3000:3000'
-    build: 
+    build:
       context: ./Tango
     depends_on:
-      - "redis"
+      - redis
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./Tango/config.py:/opt/TangoService/Tango/config.py
@@ -40,7 +40,6 @@ services:
     volumes:
       - ./Autolab/db/:/home/app/webapp/db
       - ./Autolab/config/database.yml:/home/app/webapp/config/database.yml
-      - ./Autolab/config/initializers/devise.rb:/home/app/webapp/config/initializers/devise.rb
       - ./Autolab/config/environments/production.rb:/home/app/webapp/config/environments/production.rb
       - ./Autolab/config/autogradeConfig.rb:/home/app/webapp/config/autogradeConfig.rb
       - ./Autolab/courses:/home/app/webapp/courses
@@ -98,4 +97,3 @@ services:
 
 volumes:
   mysql-db:
-
