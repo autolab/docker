@@ -28,7 +28,7 @@ pipeline {
                 sh 'git config --global user.name "jenkinsBot"'
                 sh "cd Autolab && git stash && cd .. || true "
                 sh "git submodule update --init --recursive"
-              	sh 'cd Autolab && sudo chown $USER db/schema.rb && sudo git restore db/schema.rb && git rebase origin/demosite-patches && cd ..'
+              	sh 'cd Autolab && sudo chown $USER db/schema.rb && sudo git restore db/schema.rb && cd ..'
                 sh 'grep /etc/group -e "docker"'
                 sh 'make clean && make'
                 // nuke any previous certificates, typically not necessary
