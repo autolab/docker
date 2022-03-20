@@ -58,7 +58,7 @@ pipeline {
                 sh 'make ssl'
                 sh 'python3 ci_script.py -s ./ssl/init-letsencrypt.sh'
                 // do not replace existing certificate
-                sh "echo 'n' | echo 'N' | sudo sh ./ssl/init-letsencrypt.sh"
+                sh "echo 'n' | echo 'N' | sudo bash ./ssl/init-letsencrypt.sh"
             }
         }
         stage('Deploy') {
