@@ -27,7 +27,7 @@ pipeline {
                 sh 'git config --global user.email "autolab.bot@gmail.com"'
                 sh 'git config --global user.name "jenkinsBot"'
                 sh "cd Autolab && sudo git stash && cd .. || true "
-                sh "sudo git submodule update --init --recursive --force"
+                sh "sudo git submodule update --remote --merge --force"
               	// sh 'cd Autolab && sudo chown $USER db/schema.rb && sudo git restore db/schema.rb && cd ..'
                 sh 'grep /etc/group -e "docker"'
                 sh 'make clean && make'
