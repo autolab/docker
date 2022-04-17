@@ -25,9 +25,9 @@ pipeline {
                 // need to restore the schema.db which is changed from the previous deployment
                 sh 'git config --global user.email "autolab.bot@gmail.com"'
                 sh 'git config --global user.name "jenkinsBot"'
-                sh "cd Autolab && git stash && cd .. || true "
-                sh "git submodule update --init --recursive"
-              	sh 'cd Autolab && sudo chown $USER db/schema.rb && sudo git restore db/schema.rb && git rebase origin/demosite-patches && cd ..'
+                sh "cd Autolab && sudo git stash && cd .. || true "
+                sh "sudo git submodule update --remote --merge --force"
+              	// sh 'cd Autolab && sudo chown $USER db/schema.rb && sudo git restore db/schema.rb && cd ..'
                 sh 'grep /etc/group -e "docker"'
                 sh 'make clean && make'
                 // nuke any previous certificates, typically not necessary
@@ -57,7 +57,7 @@ pipeline {
                 sh 'make ssl'
                 sh 'python3 ci_script.py -s ./ssl/init-letsencrypt.sh'
                 // do not replace existing certificate
-                sh "echo 'n' | echo 'N' | sudo sh ./ssl/init-letsencrypt.sh"
+                sh "echo 'n' | echo 'N' | sudo bash ./ssl/init-letsencrypt.sh"
             }
         }
         stage('Deploy') {
