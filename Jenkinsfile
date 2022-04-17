@@ -76,7 +76,8 @@ pipeline {
                 echo "user is: $USER"
                 sh 'pwd'
                 sh 'cd Autolab && sudo git add db/schema.rb && sudo git stash && cd ..'
-                sh 'make update'
+                sh 'cd Autolab && sudo git pull origin master && cd ..'
+                sh 'cd Tango && sudo git pull origin master && cd ..'
                 sh 'git config --global user.email "autolab.bot@gmail.com"'
                 sh 'git config --global user.name "AutolabJenkinsBot"'
                 sh 'git add Autolab'
