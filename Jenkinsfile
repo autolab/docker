@@ -22,7 +22,6 @@ pipeline {
                 sh 'ls -al'
                 echo "user is: $USER"
                 sh 'pwd'
-                // comment out rebasing for now because we need to set up git credentials
                 // need to restore the schema.db which is changed from the previous deployment
                 sh 'git config --global user.email "autolab.bot@gmail.com"'
                 sh 'git config --global user.name "jenkinsBot"'
@@ -68,6 +67,21 @@ pipeline {
                 sh "docker build -t autograding_image Tango/vmms/"
                 // bring everything up!
                 sh "docker-compose up -d"
+            }
+        }
+        stage('Update Repository Submodules') {
+            steps {
+                echo 'Updating Autolab Docker Github submodules..'
+                sh 'ls -al'
+                echo "user is: $USER"
+                sh 'pwd'
+                make update
+                sh 'git config --global user.email "autolab.bot@gmail.com"'
+                sh 'git config --global user.name "AutolabJenkinsBot"'
+                git add Autolab
+                git add Tango
+                git commit -m "Update Autolab and Tango submodules"
+                git push origin master
             }
         }
     }
