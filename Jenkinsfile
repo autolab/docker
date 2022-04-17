@@ -75,6 +75,7 @@ pipeline {
                 sh 'ls -al'
                 echo "user is: $USER"
                 sh 'pwd'
+                sh 'cd Autolab && git add db/schema.rb && git stash && cd ..'
                 sh 'make update'
                 sh 'git config --global user.email "autolab.bot@gmail.com"'
                 sh 'git config --global user.name "AutolabJenkinsBot"'
