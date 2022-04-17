@@ -75,13 +75,13 @@ pipeline {
                 sh 'ls -al'
                 echo "user is: $USER"
                 sh 'pwd'
-                make update
+                sh 'make update'
                 sh 'git config --global user.email "autolab.bot@gmail.com"'
                 sh 'git config --global user.name "AutolabJenkinsBot"'
-                git add Autolab
-                git add Tango
-                git commit -m "Update Autolab and Tango submodules"
-                git push origin master
+                sh 'git add Autolab'
+                sh 'git add Tango'
+                sh 'git commit -m "Update Autolab and Tango submodules"'
+                sh 'git push origin master'
             }
         }
     }
