@@ -75,11 +75,13 @@ pipeline {
                 sh 'ls -al'
                 echo "user is: $USER"
                 sh 'pwd'
+                sh 'git branch'
                 sh 'cd Autolab && sudo git add db/schema.rb && sudo git stash && cd ..'
                 sh 'cd Autolab && sudo git pull origin master && cd ..'
                 sh 'cd Tango && sudo git pull origin master && cd ..'
                 sh 'git config --global user.email "autolab.bot@gmail.com"'
                 sh 'git config --global user.name "AutolabJenkinsBot"'
+                sh 'git checkout master'
                 sh 'git add Autolab'
                 sh 'git add Tango'
                 sh 'git commit -m "Update Autolab and Tango submodules"'
