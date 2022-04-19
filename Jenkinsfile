@@ -82,6 +82,8 @@ pipeline {
                 sh 'git config --global user.email "autolab.bot@gmail.com"'
                 sh 'git config --global user.name "AutolabJenkinsBot"'
                 sh 'git checkout master'
+                sh 'git pull origin master'
+                sh 'git merge -m "Fast-forward merge"'
                 sh 'git add Autolab'
                 sh 'git add Tango'
                 sh 'git commit -m "Update Autolab and Tango submodules"'
