@@ -53,8 +53,8 @@ pipeline {
                 sh 'python3 ci_script.py -v .env'
                 sh 'docker-compose stop'
                 // configure SSL
-                sh "python3 ci_script.py -a nginx/app.conf"
                 sh 'make ssl'
+                sh "python3 ci_script.py -a nginx/app.conf"
                 sh 'python3 ci_script.py -s ./ssl/init-letsencrypt.sh'
                 // do not replace existing certificate
                 sh "echo 'n' | echo 'N' | sudo bash ./ssl/init-letsencrypt.sh"
