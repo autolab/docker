@@ -47,6 +47,11 @@ create-user:
 .PHONY: ssl
 ssl:
 	cp -n ./ssl/init-letsencrypt.sh.template ./ssl/init-letsencrypt.sh
+	cp -n ./nginx/app.conf.template ./nginx/app.conf
+
+.PHONY: no-ssl
+no-ssl:
+	cp -n ./nginx/no-ssl-app.conf.template ./nginx/no-ssl-app.conf
 
 
 .PHONY: clean
