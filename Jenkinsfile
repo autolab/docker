@@ -85,8 +85,9 @@ pipeline {
                 sh 'git config --global user.name "AutolabJenkinsBot"'
                 sh 'git add Autolab'
                 sh 'git add Tango'
-                sh 'git commit -m "Update Autolab and Tango submodules"'
-                sh 'git push origin master'
+                // may fail if no actual changes
+                sh 'git commit -m "Update Autolab and Tango submodules" | true'
+                sh 'git push origin master | true'
             }
         }
     }
