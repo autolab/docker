@@ -70,7 +70,7 @@ pipeline {
         }
         stage('Update Repository Submodules') {
             steps {
-                echo 'Updating Autolab Docker Github submodules..'
+                echo 'Updating Autolab Docker Github submodules...'
                 sh 'ls -al'
                 echo "user is: $USER"
                 sh 'pwd'
@@ -88,6 +88,12 @@ pipeline {
                 // may fail if no actual changes
                 sh 'git commit -m "Update Autolab and Tango submodules" | true'
                 sh 'git push origin master | true'
+            }
+        }
+        stage('Update Docs') {
+            steps {
+                echo 'Update Autolab Docs...'
+                sh 'cd Autolab && mkdocs gh-deploy && cd ..'
             }
         }
     }
