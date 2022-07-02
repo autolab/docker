@@ -93,14 +93,22 @@ pipeline {
         stage('Update Docs') {
             steps {
                 echo 'Updating Autolab Docs...'
-                sh '''
-                    if [ "$(git log -1 --pretty=format:"%an")" != "AutolabJenkinsBot" ]
-                    then
-                        cd Autolab && mkdocs gh-deploy --no-history
-                    else
-                        echo "Skipping commit by autolab-bot..."
-                    fi
-                '''
+                script {
+                    if (env.STARTED_BY_UPSTREAM_BUILD.toBoolean()) {
+                        echo 'Started by upstream build, deploying docs...'
+                        sh 'cd Autolab && mkdocs gh-deploy --no-history'
+                    } else {
+                        sh '''
+                            if [ "$(git log -1 --pretty=format:"%an")" != "AutolabJenkinsBot" ]
+                            then
+                                echo "Commit not by autolab-bot, deploying docs...";
+                                cd Autolab && mkdocs gh-deploy --no-history
+                            else
+                                echo "Commit by autolab-bot, skipping..."
+                            fi
+                        '''
+                    }
+                }
             }
         }
     }
