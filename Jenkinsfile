@@ -98,15 +98,7 @@ pipeline {
                         echo 'Started by upstream build, deploying docs...'
                         sh 'cd Autolab && mkdocs gh-deploy --no-history'
                     } else {
-                        sh '''
-                            if [ "$(git log -1 --pretty=format:"%an")" != "AutolabJenkinsBot" ]
-                            then
-                                echo "Commit not by autolab-bot, deploying docs...";
-                                cd Autolab && mkdocs gh-deploy --no-history
-                            else
-                                echo "Commit by autolab-bot, skipping..."
-                            fi
-                        '''
+                        echo 'Not started by upstream build, not deploying docs...'
                     }
                 }
             }
