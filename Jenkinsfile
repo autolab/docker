@@ -94,7 +94,7 @@ pipeline {
             steps {
                 echo 'Updating Autolab Docs...'
                 sh '''
-                    if [ $(git log -1 --pretty=format:"%an") != "AutolabJenkinsBot" ]
+                    if [ "$(git log -1 --pretty=format:"%an")" != "AutolabJenkinsBot" ]
                     then
                         cd Autolab && mkdocs gh-deploy --no-history
                     else
