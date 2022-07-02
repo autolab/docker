@@ -92,8 +92,15 @@ pipeline {
         }
         stage('Update Docs') {
             steps {
-                echo 'Update Autolab Docs...'
-                sh 'cd Autolab && mkdocs gh-deploy && cd ..'
+                echo 'Updating Autolab Docs...'
+                sh '''
+                    if [ $(git log -1 --pretty=format:"%an") != "AutolabJenkinsBot" ]
+                    then
+                        cd Autolab && mkdocs gh-deploy --no-history
+                    else
+                        echo "Skipping commit by autolab-bot..."
+                    fi
+                '''
             }
         }
     }
