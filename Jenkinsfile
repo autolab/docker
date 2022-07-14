@@ -68,7 +68,7 @@ pipeline {
                 echo "Dangling images:"
                 sh 'docker images -f "dangling=true"'
                 echo "Removing dangling images..."
-                sh 'docker rmi $(docker images -f "dangling=true" -q)'
+                sh 'docker rmi $(docker images -f "dangling=true" -q) || true'
                 // bring everything up!
                 sh "docker-compose up -d"
             }
