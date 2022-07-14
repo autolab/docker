@@ -64,6 +64,11 @@ pipeline {
             	echo 'Deploying nightly.autolabproject.com...'
                 // build autograding images
                 sh "docker build -t autograding_image Tango/vmms/"
+                // prune old images
+                echo "Dangling images:"
+                sh 'docker images -f "dangling=true"'
+                echo "Removing dangling images..."
+                sh 'docker rmi $(docker images -f "dangling=true" -q)'
                 // bring everything up!
                 sh "docker-compose up -d"
             }
