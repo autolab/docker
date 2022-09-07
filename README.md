@@ -16,3 +16,8 @@ If you are stuck or find issues with the installation process please join our Sl
 
 ## Troubleshooting and Upgrade Information
 You can find common errors and upgrade-specific changes [on our documentation here](https://docs.autolabproject.com/installation/docker-compose/#troubleshooting)
+
+
+### Infrastructure model
+
+![Infrastructure model](.infragenie/infrastructure_model.png)
