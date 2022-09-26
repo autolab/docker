@@ -101,7 +101,7 @@ pipeline {
                 script {
                     if (env.STARTED_BY_UPSTREAM_BUILD.toBoolean()) {
                         echo 'Started by upstream build, deploying docs...'
-                        sh 'cd Autolab && mkdocs gh-deploy --no-history'
+                        sh 'cd Autolab && sudo mkdocs gh-deploy --no-history'
                     } else {
                         echo 'Not started by upstream build, not deploying docs...'
                     }
