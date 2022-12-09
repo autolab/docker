@@ -62,6 +62,7 @@ clean:
 	echo "Deleting all Autolab, Tango, SSL, Nginx, Docker Compose deployment configs"
 	rm -rf ./Autolab/config/database.yml
 	rm -rf ./Autolab/config/school.yml
+	rm -rf ./Autolab/config/lti_settings.yml
 	rm -rf ./Autolab/config/environments/production.rb
 	rm -rf ./Autolab/config/autogradeConfig.rb
 	rm -rf ./Tango/config.py
