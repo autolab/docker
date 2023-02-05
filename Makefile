@@ -8,9 +8,6 @@ setup-autolab-configs:
 	@echo "Creating default Autolab/config/school.yml"
 	cp -n ./Autolab/config/school.yml.template ./Autolab/config/school.yml
 
-	@echo "Creating default Autolab/config/lti_settings.yml"
-	cp -n ./Autolab/config/lti_settings.yml.template ./Autolab/config/lti_settings.yml
-
 	@echo "Creating default Autolab/config/environments/production.rb"
 	cp -n ./Autolab/config/environments/production.rb.template ./Autolab/config/environments/production.rb
 
