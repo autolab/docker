@@ -74,6 +74,8 @@ services:
       - SMTP_DEFAULT_FROM
       - HOST_PROTOCOL
       - HOST_DOMAIN
+      - GITHUB_CLIENT_ID
+      - GITHUB_CLIENT_SECRET
 
   mysql:
     container_name: mysql
