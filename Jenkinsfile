@@ -38,20 +38,20 @@ pipeline {
                 sh 'docker stop redis || true && docker rm redis || true'
                 sh 'docker stop mysql || true && docker rm mysql || true'
                 sh 'docker stop certbot || true && docker rm certbot || true'
-                sh 'docker-compose build'
+                sh 'docker compose build'
             }
         }
         stage('Configure SSL') {
             steps {
                 echo 'Configuring SSL...'
-                sh 'docker-compose up -d'
+                sh 'docker compose up -d'
                 sh 'make set-perms'
                 sh 'make db-migrate'
                 // create initial user
                 sh 'docker exec autolab env RAILS_ENV=production bundle exec rails admin:create_root_user[admin@demo.bar,"adminfoobar","Admin","Foo"] || true'
                 // change the Tango volume path
                 sh 'python3 ci_script.py -v .env'
-                sh 'docker-compose stop'
+                sh 'docker compose stop'
                 // configure SSL
                 sh "python3 ci_script.py -a nginx/app.conf"
                 sh 'python3 ci_script.py -s ./ssl/init-letsencrypt.sh'
@@ -70,7 +70,7 @@ pipeline {
                 echo "Removing dangling images..."
                 sh 'docker rmi $(docker images -f "dangling=true" -q) || true'
                 // bring everything up!
-                sh "docker-compose up -d"
+                sh "docker compose up -d"
             }
         }
         stage('Update Repository Submodules') {
