@@ -2,8 +2,8 @@
 # Adapted from https://github.com/wmnnd/nginx-certbot
 # Run this from the root of the Autolab docker installation directory (not from the ssl subdirectory)
 
-if ! [ -x "$(command -v docker compose)" ]; then
-  echo 'Error: docker compose is not installed.' >&2
+if ! [ -x "$(command -v docker)" ]; then
+  echo 'Error: docker is not installed.' >&2
   exit 1
 fi
 
