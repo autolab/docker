@@ -39,12 +39,14 @@ services:
     # Some volume mappings may seem redundant, but we want to make it explicit
     volumes:
       - ./Autolab/db/:/home/app/webapp/db
+      - ./Autolab/attachments/:/home/app/webapp/attachments
       - ./Autolab/config/database.yml:/home/app/webapp/config/database.yml
       - ./Autolab/config/environments/production.rb:/home/app/webapp/config/environments/production.rb
       - ./Autolab/config/autogradeConfig.rb:/home/app/webapp/config/autogradeConfig.rb
       - ./Autolab/courses:/home/app/webapp/courses
       - ./Autolab/courseConfig:/home/app/webapp/courseConfig
       - ./Autolab/assessmentConfig:/home/app/webapp/assessmentConfig
+      - ./Autolab/storage/:/home/app/webapp/storage
       - ./ssl/certbot/conf:/etc/letsencrypt
       - ./ssl/certbot/www:/var/www/certbot
 
