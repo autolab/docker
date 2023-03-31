@@ -39,7 +39,6 @@ services:
     # Some volume mappings may seem redundant, but we want to make it explicit
     volumes:
       - ./Autolab/db/:/home/app/webapp/db
-      - ./Autolab/attachments/:/home/app/webapp/attachments
       - ./Autolab/config/database.yml:/home/app/webapp/config/database.yml
       - ./Autolab/config/environments/production.rb:/home/app/webapp/config/environments/production.rb
       - ./Autolab/config/autogradeConfig.rb:/home/app/webapp/config/autogradeConfig.rb
