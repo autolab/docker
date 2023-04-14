@@ -60,7 +60,6 @@ set-perms:
 create-user:
 	docker exec -it autolab bash /home/app/webapp/bin/initialize_user.sh
 
-
 .PHONY: clean
 clean:
 	echo "Deleting all Autolab, Tango, SSL, Nginx, Docker Compose deployment configs"
