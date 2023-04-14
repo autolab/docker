@@ -1,6 +1,6 @@
 server {
   listen 80;
-  server_name localhost;
+  server_name <REPLACE_WITH_YOUR_DOMAIN>;
   root /home/app/webapp/public;
   passenger_enabled on;
   passenger_user app;
