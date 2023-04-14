@@ -11,6 +11,10 @@ setup-autolab-configs:
 	@echo "Creating default Autolab/config/environments/production.rb"
 	cp -n ./Autolab/config/environments/production.rb.template ./Autolab/config/environments/production.rb
 
+	# Necessary for secrets
+	@echo "Creating default Autolab/.env"
+	cp -n ./Autolab/.env.template ./Autolab/.env
+
 	@echo "Creating default .env"
 	cp -n ./.env.template ./.env
 
@@ -44,6 +48,9 @@ update:
 	cd ..
 	cd ./Tango && git checkout master && git pull origin master
 	cd ..
+
+	# To avoid breaking existing installs
+	cp -n ./Autolab/.env.template ./Autolab/.env
 
 .PHONY: set-perms
 set-perms:
