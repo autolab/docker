@@ -50,7 +50,7 @@ update:
 	cd ..
 
 	# To avoid breaking existing installs
-	cp -n ./Autolab/.env.template ./Autolab/.env
+	cp -n ./Autolab/.env.template ./Autolab/.env || echo ".env already initialized"
 
 .PHONY: set-perms
 set-perms:
