@@ -13,7 +13,7 @@ setup-autolab-configs:
 
 	# Necessary for secrets
 	@echo "Creating default Autolab/.env"
-	cp -n ./Autolab/.env.template ./Autolab/.env
+	cp -n ./Autolab/.env.template ./Autolab/.env || echo "./Autolab/.env already initialized"
 
 	@echo "Creating default .env"
 	cp -n ./.env.template ./.env
@@ -50,7 +50,7 @@ update:
 	cd ..
 
 	# To avoid breaking existing installs
-	cp -n ./Autolab/.env.template ./Autolab/.env || echo ".env already initialized"
+	cp -n ./Autolab/.env.template ./Autolab/.env || echo "./Autolab/.env already initialized"
 
 .PHONY: set-perms
 set-perms:
