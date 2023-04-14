@@ -7,8 +7,13 @@ if ! ls docker-compose.yml > /dev/null 2>&1 ; then
 fi
 
 if ! ls .env > /dev/null 2>&1 ; then
-  echo ".env file does not exist (run make)"
+  echo ".env file does not exist (run: make)"
   exit 0
+fi
+
+if ! (grep -q SECRET_KEY_BASE .env && grep -q LOCKBOX_MASTER_KEY .env && grep -q DEVISE_SECRET_KEY .env); then
+  echo ".env file must be updated (run: cp .env.template .env; make initialize_secrets)"
+  exit 1
 fi
 
 SECRET_KEY_BASE=$(openssl rand -hex 64)
