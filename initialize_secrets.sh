@@ -6,6 +6,11 @@ if ! ls docker-compose.yml > /dev/null 2>&1 ; then
   exit 1
 fi
 
+if ! ls .env > /dev/null 2>&1 ; then
+  echo ".env file does not exist (run make)"
+  exit 0
+fi
+
 SECRET_KEY_BASE=$(openssl rand -hex 64)
 LOCKBOX_MASTER_KEY=$(openssl rand -hex 32)
 DEVISE_SECRET_KEY=$(openssl rand -hex 64)
