@@ -1,4 +1,5 @@
-all: setup-autolab-configs setup-tango-configs setup-docker-configs
+all: setup-autolab-configs setup-tango-configs setup-docker-configs initialize_secrets
+update: update-repos initialize_secrets
 
 .PHONY: setup-autolab-configs
 setup-autolab-configs: 
@@ -11,10 +12,6 @@ setup-autolab-configs:
 	@echo "Creating default Autolab/config/environments/production.rb"
 	cp -n ./Autolab/config/environments/production.rb.template ./Autolab/config/environments/production.rb
 
-	# Necessary for secrets
-	@echo "Creating default Autolab/.env"
-	cp -n ./Autolab/.env.template ./Autolab/.env || echo "./Autolab/.env already initialized"
-
 	@echo "Creating default .env"
 	cp -n ./.env.template ./.env
 
@@ -26,31 +23,34 @@ setup-autolab-configs:
 
 .PHONY: setup-tango-configs
 setup-tango-configs: 
-	echo "Creating default Tango/config.py"
+	@echo "Creating default Tango/config.py"
 	cp -n ./Tango/config.template.py ./Tango/config.py
 
 .PHONY: setup-docker-configs
 setup-docker-configs:
-	echo "Creating default ssl/init-letsencrypt.sh"
+	@echo "Creating default ssl/init-letsencrypt.sh"
 	cp -n ./ssl/init-letsencrypt.sh.template ./ssl/init-letsencrypt.sh
-	echo "Creating default nginx/app.conf"
+	@echo "Creating default nginx/app.conf"
 	cp -n ./nginx/app.conf.template ./nginx/app.conf
-	echo "Creating default nginx/no-ssl-app.conf"
+	@echo "Creating default nginx/no-ssl-app.conf"
 	cp -n ./nginx/no-ssl-app.conf.template ./nginx/no-ssl-app.conf
+
+.PHONY: initialize_secrets
+initialize_secrets:
+	@echo Initializing docker and tango secret keys.
+	./initialize_secrets.sh
 
 .PHONY: db-migrate
 db-migrate:
 	docker exec autolab bash /home/app/webapp/docker/db_migrate.sh
 
-.PHONY: update
-update:
+.PHONY: update-repos
+update-repos:
+	@echo Pulling Autolab and Tango repositories.
 	cd ./Autolab && git checkout master && git pull origin master
 	cd ..
 	cd ./Tango && git checkout master && git pull origin master
 	cd ..
-
-	# To avoid breaking existing installs
-	cp -n ./Autolab/.env.template ./Autolab/.env || echo "./Autolab/.env already initialized"
 
 .PHONY: set-perms
 set-perms:
@@ -62,7 +62,7 @@ create-user:
 
 .PHONY: clean
 clean:
-	echo "Deleting all Autolab, Tango, SSL, Nginx, Docker Compose deployment configs"
+	@echo "Deleting all Autolab, Tango, SSL, Nginx, Docker Compose deployment configs"
 	rm -rf ./Autolab/config/database.yml
 	rm -rf ./Autolab/config/school.yml
 	rm -rf ./Autolab/config/environments/production.rb
