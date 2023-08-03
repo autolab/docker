@@ -5,4 +5,10 @@ server {
   passenger_enabled on;
   passenger_user app;
   passenger_ruby /usr/bin/ruby2.7;
+
+  # Set max client body size for assessments
+  # regex matches one or more alpha-numeric characters and the hyphen '-'
+  location ~* /courses/[\w|-]+/assessments/importAsmtFromTar {
+    client_max_body_size 1G;
+  }
 }
