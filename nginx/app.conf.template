@@ -40,9 +40,13 @@ server {
 
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
-    # Set max client body size for assessments
+    # Set max client body size for assessments and autograders
     # regex matches one or more alpha-numeric characters and the hyphen '-'
     location ~* /courses/[\w|-]+/assessments/importAsmtFromTar {
+        client_max_body_size 1G;
+    }
+
+    location ~* /courses/[\w|-]+/assessments/[\w|-]+/autograder.\d+ {
         client_max_body_size 1G;
     }
 }
