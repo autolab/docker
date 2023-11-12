@@ -42,6 +42,9 @@ services:
       - ./Autolab/config/database.yml:/home/app/webapp/config/database.yml
       - ./Autolab/config/environments/production.rb:/home/app/webapp/config/environments/production.rb
       - ./Autolab/config/autogradeConfig.rb:/home/app/webapp/config/autogradeConfig.rb
+      - ./Autolab/config/oauth_config.yml:/home/app/webapp/config/oauth_config.yml
+      - ./Autolab/config/github_config.yml:/home/app/webapp/config/github_config.yml
+      - ./Autolab/config/smtp_config.yml:/home/app/webapp/config/smtp_config.yml
       - ./Autolab/courses:/home/app/webapp/courses
       - ./Autolab/courseConfig:/home/app/webapp/courseConfig
       - ./Autolab/assessmentConfig:/home/app/webapp/assessmentConfig
@@ -54,10 +57,10 @@ services:
       # - ./ssl/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem
 
       # Comment the below out to disable SSL (not recommended)
-      - ./nginx/app.conf:/etc/nginx/sites-enabled/webapp.conf
+      # - ./nginx/app.conf:/etc/nginx/sites-enabled/webapp.conf
 
       # Uncomment the below to disable SSL (not recommended)
-      # - ./nginx/no-ssl-app.conf:/etc/nginx/sites-enabled/webapp.conf
+      - ./nginx/no-ssl-app.conf:/etc/nginx/sites-enabled/webapp.conf
 
     environment:
       - DOCKER_SSL
