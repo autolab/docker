@@ -57,10 +57,10 @@ services:
       # - ./ssl/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem
 
       # Comment the below out to disable SSL (not recommended)
-      # - ./nginx/app.conf:/etc/nginx/sites-enabled/webapp.conf
+      - ./nginx/app.conf:/etc/nginx/sites-enabled/webapp.conf
 
       # Uncomment the below to disable SSL (not recommended)
-      - ./nginx/no-ssl-app.conf:/etc/nginx/sites-enabled/webapp.conf
+      # - ./nginx/no-ssl-app.conf:/etc/nginx/sites-enabled/webapp.conf
 
     environment:
       - DOCKER_SSL
