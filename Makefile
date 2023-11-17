@@ -1,4 +1,5 @@
-all: setup-autolab-configs setup-tango-configs
+all: setup-autolab-configs setup-tango-configs setup-docker-configs initialize_secrets
+update: update-repos initialize_secrets
 
 .PHONY: setup-autolab-configs
 setup-autolab-configs: 
@@ -22,15 +23,30 @@ setup-autolab-configs:
 
 .PHONY: setup-tango-configs
 setup-tango-configs: 
-	echo "Creating default Tango/config.py"
+	@echo "Creating default Tango/config.py"
 	cp -n ./Tango/config.template.py ./Tango/config.py
+
+.PHONY: setup-docker-configs
+setup-docker-configs:
+	@echo "Creating default ssl/init-letsencrypt.sh"
+	cp -n ./ssl/init-letsencrypt.sh.template ./ssl/init-letsencrypt.sh
+	@echo "Creating default nginx/app.conf"
+	cp -n ./nginx/app.conf.template ./nginx/app.conf
+	@echo "Creating default nginx/no-ssl-app.conf"
+	cp -n ./nginx/no-ssl-app.conf.template ./nginx/no-ssl-app.conf
+
+.PHONY: initialize_secrets
+initialize_secrets:
+	@echo Initializing docker and tango secret keys.
+	./initialize_secrets.sh
 
 .PHONY: db-migrate
 db-migrate:
 	docker exec autolab bash /home/app/webapp/docker/db_migrate.sh
 
-.PHONY: update
-update:
+.PHONY: update-repos
+update-repos:
+	@echo Pulling Autolab and Tango repositories.
 	cd ./Autolab && git checkout master && git pull origin master
 	cd ..
 	cd ./Tango && git checkout master && git pull origin master
@@ -44,19 +60,17 @@ set-perms:
 create-user:
 	docker exec -it autolab bash /home/app/webapp/bin/initialize_user.sh
 
-.PHONY: ssl
-ssl:
-	cp -n ./ssl/init-letsencrypt.sh.template ./ssl/init-letsencrypt.sh
-
-
 .PHONY: clean
 clean:
+	@echo "Deleting all Autolab, Tango, SSL, Nginx, Docker Compose deployment configs"
 	rm -rf ./Autolab/config/database.yml
 	rm -rf ./Autolab/config/school.yml
 	rm -rf ./Autolab/config/environments/production.rb
 	rm -rf ./Autolab/config/autogradeConfig.rb
 	rm -rf ./Tango/config.py
 	rm -rf ./ssl/init-letsencrypt.sh
+	rm -rf ./nginx/app.conf
+	rm -rf ./nginx/no-ssl-app.conf
 	rm -rf ./Autolab/log
 	rm -rf ./.env
 	# We don't remove Autolab/courses here, as it may contain important user data. Remove it yourself manually if needed.

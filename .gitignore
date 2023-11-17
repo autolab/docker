@@ -1,7 +1,14 @@
 .idea/
+
+# Secrets
+.env
 ssl/certbot/
 ssl/fullchain.pem
 ssl/privkey.pem
 ssl/ssl-dhparams.pem
+
+# User-modified
 init-letsencrypt.sh
-.env
+app.conf
+no-ssl-app.conf
+
