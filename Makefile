@@ -21,6 +21,15 @@ setup-autolab-configs:
 	@echo "Creating default Autolab/courses"
 	mkdir -p ./Autolab/courses
 
+	@echo "Creating default oauth_config.yml"
+	touch ./Autolab/config/oauth_config.yml
+
+	@echo "Creating default smtp_config.yml"
+	touch ./Autolab/config/smtp_config.yml
+
+	@echo "Creating default github_config.yml"
+	touch ./Autolab/config/github_config.yml 
+
 .PHONY: setup-tango-configs
 setup-tango-configs: 
 	@echo "Creating default Tango/config.py"
