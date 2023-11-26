@@ -100,6 +100,18 @@ services:
     volumes:
       - ./ssl/certbot/conf:/etc/letsencrypt
       - ./ssl/certbot/www:/var/www/certbot
+  
+  fileexplorer:
+    container_name: fileexplorer
+    image: adrientoub/file-explorer
+    volumes:
+      - ./Autolab/courses:/home/app/webapp/courses
+    ports:
+      - "8689:3000"
+    environment:
+      # Replace RAILS SECRET by pasting rails token: bundle exec rails secret
+      - SECRET_KEY_BASE=RAILS_SECRET
+      - BASE_DIRECTORY=/home/app/webapp/courses
 
 volumes:
   mysql-db:
