@@ -1,5 +1,5 @@
-all: setup-autolab-configs setup-tango-configs setup-docker-configs initialize_secrets
-update: update-repos initialize_secrets
+all: setup-autolab-configs setup-tango-configs setup-docker-configs setup-config-ymls initialize_secrets
+update: update-repos setup-config-ymls initialize_secrets
 
 .PHONY: setup-autolab-configs
 setup-autolab-configs: 
@@ -35,6 +35,17 @@ setup-docker-configs:
 	@echo "Creating default nginx/no-ssl-app.conf"
 	cp -n ./nginx/no-ssl-app.conf.template ./nginx/no-ssl-app.conf
 
+.PHONY: setup-config-ymls
+setup-config-ymls:
+	@echo "Creating default oauth_config.yml"
+	touch ./Autolab/config/oauth_config.yml
+
+	@echo "Creating default smtp_config.yml"
+	touch ./Autolab/config/smtp_config.yml
+
+	@echo "Creating default github_config.yml"
+	touch ./Autolab/config/github_config.yml 
+
 .PHONY: initialize_secrets
 initialize_secrets:
 	@echo Initializing docker and tango secret keys.
@@ -67,6 +78,9 @@ clean:
 	rm -rf ./Autolab/config/school.yml
 	rm -rf ./Autolab/config/environments/production.rb
 	rm -rf ./Autolab/config/autogradeConfig.rb
+	rm -rf ./Autolab/config/oauth_config.yml
+	rm -rf ./Autolab/config/smtp_config.yml
+	rm -rf ./Autolab/config/github_config.yml
 	rm -rf ./Tango/config.py
 	rm -rf ./ssl/init-letsencrypt.sh
 	rm -rf ./nginx/app.conf
