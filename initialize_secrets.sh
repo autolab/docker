@@ -11,7 +11,7 @@ if ! ls .env > /dev/null 2>&1 ; then
   exit 0
 fi
 
-if ! (grep -q SECRET_KEY_BASE .env && grep -q LOCKBOX_MASTER_KEY .env && grep -q DEVISE_SECRET_KEY .env); then
+if ! (grep -q SECRET_KEY_BASE .env && grep -q LOCKBOX_MASTER_KEY .env && grep -q DEVISE_SECRET_KEY .env && grep -q RAILS_SECRET_KEY .env); then
   echo ".env file must be updated (run: cp .env.template .env; make initialize_secrets)"
   exit 1
 fi
@@ -20,6 +20,10 @@ SECRET_KEY_BASE=$(openssl rand -hex 64)
 LOCKBOX_MASTER_KEY=$(openssl rand -hex 32)
 DEVISE_SECRET_KEY=$(openssl rand -hex 64)
 SECRET_TANGO_KEY=$(openssl rand -hex 32)
+
+cd ./Autolab
+RAILS_SECRET_KEY=$(bundle exec rails secret)
+cd ..
 
 if ! perl -i -pe"s/<SECRET_KEY_BASE_REPLACE_ME>/${SECRET_KEY_BASE}/g" .env ; then
   echo "SECRET_KEY_BASE seems to have already been set"
@@ -35,6 +39,10 @@ fi
 
 if ! perl -i -pe"s/<SECRET_TANGO_KEY_REPLACE_ME>/${SECRET_TANGO_KEY}/g" .env ; then
   echo "SECRET_TANGO_KEY seems to have already been set"
+fi
+
+if ! perl -i -pe"s/<RAILS_SECRET_KEY_REPLACE_ME>/${RAILS_SECRET_KEY}/g" .env ; then
+  echo "RAILS SECRET KEY seems to have already been set"
 fi
 
 echo ".env file secrets have been initialized"
