@@ -55,10 +55,10 @@ services:
       # - ./ssl/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem
 
       # Comment the below out to disable SSL (not recommended)
-      - ./nginx/app.conf:/etc/nginx/sites-enabled/webapp.conf
+      # - ./nginx/app.conf:/etc/nginx/sites-enabled/webapp.conf
 
       # Uncomment the below to disable SSL (not recommended)
-      # - ./nginx/no-ssl-app.conf:/etc/nginx/sites-enabled/webapp.conf
+      - ./nginx/no-ssl-app.conf:/etc/nginx/sites-enabled/webapp.conf
 
     environment:
       - DOCKER_SSL
@@ -100,18 +100,31 @@ services:
     volumes:
       - ./ssl/certbot/conf:/etc/letsencrypt
       - ./ssl/certbot/www:/var/www/certbot
-  
-  fileexplorer:
-    container_name: fileexplorer
-    image: adrientoub/file-explorer
-    volumes:
-      - ./Autolab/courses:/home/app/webapp/courses
+
+  nginx:
+    container_name: nginx-proxy
+    image: nginx
     ports:
-      - "8689:3000"
+      - "81:81"
+      # - "445:445"
     environment:
-      # Replace RAILS SECRET by pasting rails token: bundle exec rails secret
+      - FORWARD_HOST=localhost
+      - FORWARD_PORT=8080
+    volumes:
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd
+      - ./nginx/nginx-basic-auth.conf:/etc/nginx/nginx-basic-auth.conf
+
+  filemanager:
+    container_name: filemanager
+    image: adrientoub/file-explorer
+    ports:
+      - "8080:3000"
+    volumes:
+      - ./Autolab/courses:/courses
+    environment:
       - SECRET_KEY_BASE=RAILS_SECRET
-      - BASE_DIRECTORY=/home/app/webapp/courses
+      - BASE_DIRECTORY=/courses
 
 volumes:
   mysql-db:
+

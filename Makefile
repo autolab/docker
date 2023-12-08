@@ -40,6 +40,11 @@ initialize_secrets:
 	@echo Initializing docker and tango secret keys.
 	./initialize_secrets.sh
 
+.PHONY: setup-file-manager-auth
+setup-file-manager-auth:
+	@echo Setting up file manager auth
+	./initialize_file_manager.sh
+
 .PHONY: db-migrate
 db-migrate:
 	docker exec autolab bash /home/app/webapp/docker/db_migrate.sh
