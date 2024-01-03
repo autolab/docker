@@ -23,7 +23,7 @@ server {
     passenger_enabled on;
     passenger_app_env production;
 
-    passenger_ruby /usr/bin/ruby2.7;
+    passenger_ruby /usr/bin/ruby3.2;
     passenger_user app;
 
     ssl_certificate /etc/letsencrypt/live/<REPLACE_WITH_YOUR_DOMAIN>/fullchain.pem;
