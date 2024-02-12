@@ -104,5 +104,30 @@ services:
       - ./ssl/certbot/conf:/etc/letsencrypt
       - ./ssl/certbot/www:/var/www/certbot
 
+  nginx:
+    container_name: nginx-proxy
+    image: nginx
+    ports:
+      - "81:81"
+      - "445:445"
+    environment:
+      - FORWARD_HOST=localhost
+      - FORWARD_PORT=8080
+    volumes:
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd
+      - ./nginx/nginx-basic-auth.conf:/etc/nginx/nginx-basic-auth.conf
+
+  filemanager:
+    container_name: filemanager
+    image: adrientoub/file-explorer
+    ports:
+      - "8080:3000"
+    volumes:
+      - ./Autolab/courses:/courses
+    environment:
+      - SECRET_KEY_BASE=RAILS_SECRET
+      - BASE_DIRECTORY=/courses
+
 volumes:
   mysql-db:
+
