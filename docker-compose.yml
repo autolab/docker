@@ -43,8 +43,11 @@ services:
       - ./Autolab/config/environments/production.rb:/home/app/webapp/config/environments/production.rb
       - ./Autolab/config/autogradeConfig.rb:/home/app/webapp/config/autogradeConfig.rb
       - ./Autolab/config/oauth_config.yml:/home/app/webapp/config/oauth_config.yml
-      - ./Autolab/config/github_config.yml:/home/app/webapp/config/github_config.yml
       - ./Autolab/config/smtp_config.yml:/home/app/webapp/config/smtp_config.yml
+      - ./Autolab/config/github_config.yml:/home/app/webapp/config/github_config.yml
+      - ./Autolab/config/lti_config.yml:/home/app/webapp/config/lti_config.yml
+      - ./Autolab/config/lti_platform_jwk.json:/home/app/webapp/config/lti_platform_jwk.json
+      - ./Autolab/config/lti_tool_jwk.json:/home/app/webapp/config/lti_tool_jwk.json
       - ./Autolab/courses:/home/app/webapp/courses
       - ./Autolab/courseConfig:/home/app/webapp/courseConfig
       - ./Autolab/assessmentConfig:/home/app/webapp/assessmentConfig
@@ -53,9 +56,9 @@ services:
       - ./ssl/certbot/www:/var/www/certbot
 
       # Uncomment the below if you are using your own certificate
-      # - ./ssl/fullchain.pem:/etc/letsencrypt/live/test.autolab.io/fullchain.pem
-      # - ./ssl/privkey.pem:/etc/letsencrypt/live/test.autolab.io/privkey.pem
-      # - ./ssl/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem
+      - ./ssl/fullchain.pem:/etc/letsencrypt/live/test.autolab.io/fullchain.pem
+      - ./ssl/privkey.pem:/etc/letsencrypt/live/test.autolab.io/privkey.pem
+      - ./ssl/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem
 
       # Comment the below out to disable SSL (not recommended)
       - ./nginx/app.conf:/etc/nginx/sites-enabled/webapp.conf

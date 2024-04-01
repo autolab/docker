@@ -2,7 +2,7 @@ all: setup-autolab-configs setup-tango-configs setup-docker-configs setup-config
 update: update-repos setup-config-ymls initialize_secrets
 
 .PHONY: setup-autolab-configs
-setup-autolab-configs: 
+setup-autolab-configs:
 	@echo "Creating default Autolab/config/database.yml"
 	cp -n ./Autolab/config/database.docker.yml ./Autolab/config/database.yml
 
@@ -22,7 +22,7 @@ setup-autolab-configs:
 	mkdir -p ./Autolab/courses
 
 .PHONY: setup-tango-configs
-setup-tango-configs: 
+setup-tango-configs:
 	@echo "Creating default Tango/config.py"
 	cp -n ./Tango/config.template.py ./Tango/config.py
 
@@ -44,7 +44,16 @@ setup-config-ymls:
 	touch ./Autolab/config/smtp_config.yml
 
 	@echo "Creating default github_config.yml"
-	touch ./Autolab/config/github_config.yml 
+	touch ./Autolab/config/github_config.yml
+
+	@echo "Creating default lti_config.yml"
+	touch ./Autolab/config/lti_config.yml
+
+	@echo "Creating default lti_platform_jwk.json"
+	touch ./Autolab/config/lti_platform_jwk.json
+
+	@echo "Creating default lti_tool_jwk.json"
+	touch ./Autolab/config/lti_tool_jwk.json
 
 .PHONY: initialize_secrets
 initialize_secrets:
@@ -81,6 +90,9 @@ clean:
 	rm -rf ./Autolab/config/oauth_config.yml
 	rm -rf ./Autolab/config/smtp_config.yml
 	rm -rf ./Autolab/config/github_config.yml
+	rm -rf ./Autolab/config/lti_config.yml
+	rm -rf ./Autolab/config/lti_platform_jwk.json
+	rm -rf ./Autolab/config/lti_tool_jwk.json
 	rm -rf ./Tango/config.py
 	rm -rf ./ssl/init-letsencrypt.sh
 	rm -rf ./nginx/app.conf
