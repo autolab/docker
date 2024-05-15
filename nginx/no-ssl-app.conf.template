@@ -10,7 +10,7 @@ server {
     # [\w|-]+ regex matches one or more alpha-numeric characters and the hyphen '-'
 
     # Import assessment from tarball
-    location ~* /courses/[\w|-]+/assessments/importAsmtFromTar {
+    location ~* /courses/[\w|-]+/assessments/import_asmt_from_tar {
         client_max_body_size 1G;
     }
 
