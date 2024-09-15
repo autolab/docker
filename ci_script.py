@@ -12,7 +12,7 @@ DEFAULT_DOMAINS = "domains=(example.com)"
 DEPLOYMENT_SITE_NAME = "nightly.autolabproject.com"
 NGINX_APP_CONFIG_DEFAULT_DOMAIN = "<REPLACE_WITH_YOUR_DOMAIN>"
 GOOGLE_ANALYTICS_CONFIG_DEFAULT="config.x.google_analytics_id = nil"
-NIGHTLY_ANALYTICS_CONFIG_ID = "config.x.google_analytics_id = G-EDGWY44RB2"
+NIGHTLY_ANALYTICS_CONFIG_ID = 'config.x.google_analytics_id = "G-EDGWY44RB2"'
 def replace_exp(file, search_exp, replace_exp):
     success = False
     for line in fileinput.input(file, inplace=1):
