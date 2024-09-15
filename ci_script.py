@@ -11,7 +11,8 @@ DEFAULT_VOLUME_PATH = (
 DEFAULT_DOMAINS = "domains=(example.com)"
 DEPLOYMENT_SITE_NAME = "nightly.autolabproject.com"
 NGINX_APP_CONFIG_DEFAULT_DOMAIN = "<REPLACE_WITH_YOUR_DOMAIN>"
-
+GOOGLE_ANALYTICS_CONFIG_DEFAULT="config.x.google_analytics_id = nil"
+NIGHTLY_ANALYTICS_CONFIG_ID = f'config.x.google_analytics_id = G-EDGWY44RB2'
 def replace_exp(file, search_exp, replace_exp):
     success = False
     for line in fileinput.input(file, inplace=1):
@@ -24,7 +25,7 @@ def replace_exp(file, search_exp, replace_exp):
 
 if __name__ == "__main__":
     arg_list = sys.argv[1:]
-    options = "v:s:a:"
+    options = "v:s:a:g:"
     dir_path = os.path.dirname(os.path.realpath(__file__))
     try:
         arguments, values = getopt.getopt(arg_list, options)
@@ -69,6 +70,17 @@ if __name__ == "__main__":
                 else:
                     print(
                         f"did not find a matching string {DEFAULT_DOMAINS} in {file_name}."
+                    )
+            elif arg == "-g":
+                domain_name = DEPLOYMENT_SITE_NAME
+                replaced = replace_exp(file_name, GOOGLE_ANALYTICS_CONFIG_DEFAULT, NIGHTLY_ANALYTICS_CONFIG_ID)
+                if replaced:
+                    print(
+                        f"changed domains from {GOOGLE_ANALYTICS_CONFIG_DEFAULT} to {NIGHTLY_ANALYTICS_CONFIG_ID} in {file_name}."
+                    )
+                else:
+                    print(
+                        f"did not find a matching string {GOOGLE_ANALYTICS_CONFIG_DEFAULT} in {file_name}."
                     )
             else:
                 raise ValueError("not valid input to this script")
