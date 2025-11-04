@@ -1,0 +1,392 @@
+---
+# Defines user-inputted parameters when creating the stack.
+# Required: SSH key and Autolab password.
+# Recommended: Domain, MySQL root password, MySQL user password.
+# Optional: `school.yml` configuration.
+Parameters:
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    AllowedPattern: ".+"
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+  ALPassword:
+    Type: String
+    MinLength: 8
+    MaxLength: 80
+    AllowedPattern: '[a-zA-Z0-9]*'
+    Description: must be at least 8 characters long (only alphanumeric).
+    ConstraintDescription: must be at least 8 characters long (only alphanumeric).
+    NoEcho: true
+  ElasticIP:
+    Type: String
+    MinLength: 7
+    MaxLength: 15
+    AllowedPattern: '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+    Description: existing elastic IP address, must be created on AWS beforehand.
+    ConstraintDescription: must be an IPv4 IP address.
+  AllowedIPs:
+    Type: String
+    MinLength: 9
+    MaxLength: 19
+    AllowedPattern: '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,3}'
+    Description: set CIDR to x.x.x.x/32 to allow one specific IP address access, 0.0.0.0/0 to allow all IP addresses access, or another CIDR range.
+    ConstraintDescription: must be an IPv4 IP subnet.
+  DomainName:
+    Type: String
+    MinLength: 0
+    MaxLength: 80
+    AllowedPattern: '^$|[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+    Description: "example: nightly.autolabproject.com."
+    ConstraintDescription: must be a valid domain.
+    Default: ''
+  DBRootPassword:
+    Type: String
+    MinLength: 0
+    MaxLength: 80
+    AllowedPattern: '[a-zA-Z0-9]*'
+    Description: default value is 'root'.
+    ConstraintDescription: must contain only alphanumeric characters.
+    Default: ''
+    NoEcho: true
+  DBPassword:
+    Type: String
+    MinLength: 0
+    MaxLength: 80
+    AllowedPattern: '[a-zA-Z0-9]*'
+    Description: default value is 'password'.
+    ConstraintDescription: must contain only alphanumeric characters.
+    Default: ''
+    NoEcho: true
+  OrgName:
+    Type: String
+    MinLength: 0
+    MaxLength: 80
+    AllowedPattern: '[a-zA-Z0-9\s]*'
+    ConstraintDescription: must contain only alphanumeric characters or spaces.
+    Default: ''
+  AbbrevName:
+    Type: String
+    MinLength: 0
+    MaxLength: 80
+    AllowedPattern: '[a-zA-Z0-9]*'
+    ConstraintDescription: must contain only alphanumeric characters.
+    Default: ''
+  SupportEmail:
+    Type: String
+    MinLength: 0
+    MaxLength: 80
+    AllowedPattern: '^$|[\w._+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+    ConstraintDescription: must be a valid email address.
+    Default: ''
+  TechEmail:
+    Type: String
+    MinLength: 0
+    MaxLength: 80
+    AllowedPattern: '^$|[\w._+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+    ConstraintDescription: must be a valid email address.
+    Default: ''
+
+# Organizes the input parameters into groups and assigns them labels.
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Administrative (Required)
+        Parameters:
+          - KeyName
+          - ALPassword
+          - ElasticIP
+          - AllowedIPs
+      - Label:
+          default: Administrative (Recommended)
+        Parameters:
+          - DomainName
+          - DBRootPassword
+          - DBPassword
+      - Label:
+          default: Organization Information (Optional)
+        Parameters:
+          - OrgName
+          - AbbrevName
+          - SupportEmail
+          - TechEmail
+    ParameterLabels:
+      KeyName: 
+        default: EC2 SSH KeyPair
+      ALPassword:
+        default: Autolab Admin Password
+      ElasticIP:
+        default: Elastic IP
+      AllowedIPs:
+        default: Allowed IPs for SSH
+      DomainName:
+        default: Domain Name
+      DBRootPassword:
+        default: MySQL Root Password
+      DBPassword:
+        default: MySQL Database Password
+      OrgName:
+        default: Organization Name
+      AbbrevName:
+        default: Abbreviated Organization Name
+      SupportEmail:
+        default: Support Email
+      TechEmail:
+        default: Tech Email
+
+# Boolean values necessary for conditional actions in CloudFormation.
+Conditions:
+  HasDomainName: !Not [!Equals [!Ref DomainName, '']]
+  HasDBRootPassword: !Not [!Equals [!Ref DBRootPassword, '']]
+  HasDBPassword: !Not [!Equals [!Ref DBPassword, '']]
+  HasOrgName: !Not [!Equals [!Ref OrgName, '']]
+  HasAbbrevName: !Not [!Equals [!Ref AbbrevName, '']]
+  HasSupportEmail: !Not [!Equals [!Ref SupportEmail, '']]
+  HasTechEmail: !Not [!Equals [!Ref TechEmail, '']]
+
+Mappings: 
+  RegionMap: 
+    us-east-1:
+      ImageId: ami-0afa238a3e77d5405
+    us-east-2:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    us-west-1:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    us-west-2:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    ap-east-1:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    ap-south-1:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    ap-south-2:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    ap-northeast-1:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    ap-northeast-2:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    ap-northeast-3:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    ap-southeast-1:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    ap-southeast-2:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    ap-southeast-3:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    ap-southeast-4:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    ca-central-1:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    eu-central-1:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    eu-central-2:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    eu-west-1:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    eu-west-2:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    eu-west-3:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    eu-north-1:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    eu-south-1:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    eu-south-2:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    af-south-1:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    sa-east-1:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    me-south-1:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+    me-central-1:
+      ImageId: ami-xxxxxxxxxxxxxxxxx
+
+# Defines the resources created by the stack.
+# Currently: one EC2 instance and one security group.
+Resources:
+  
+  # Creates an AWS EC2 instance. 
+  Autolab:
+    Type: AWS::EC2::Instance
+    Metadata:
+      # Defines commands for the `cfn-init` script to run at instance setup.
+      AWS::CloudFormation::Init:
+        # Orders processing of configuration keys.
+        configSets:
+          setup:
+            - configure
+            - deploy
+            - clean
+
+        # Configures `docker-compose.yml`, `.env`, and `school.yml`.
+        # Disables SSL if no domain is specified by the user.
+        configure:
+          files:
+            /tmp/configure:
+              content:
+                !Sub 
+                - |
+                  #!/bin/bash
+                  ${DisableSSL}
+                  ${SetDBPassword}
+                  ${SetOrgName}
+                  ${SetAbbrevName}
+                  ${SetSupportEmail}
+                  ${SetTechEmail}
+                - DisableSSL: !If 
+                  - HasDomainName
+                  - !Sub |
+                    sed -i 's/<REPLACE_WITH_YOUR_DOMAIN>/${DomainName}/' nginx/app.conf
+                    sed -i '/domains=/ s/(.*)/(${DomainName})/' ssl/init-letsencrypt.sh
+                    sed -i '/email=/ s/\".*\"/\"\"/' ssl/init-letsencrypt.sh
+                    sed -i 's/docker-compose/docker compose/' ssl/init-letsencrypt.sh
+                    sed -i '/if \[ -d/,+6d' ssl/init-letsencrypt.sh
+                  - |
+                    sed -i '/nginx\/app.conf/ s/- /# - /' docker-compose.yml
+                    sed -i '/no-ssl-app.conf/ s/# //' docker-compose.yml
+                    sed -i '/DOCKER_SSL/ s/=true/=false/' .env
+                  SetDBRootPassword: !If [HasDBRootPassword, "sed -i '/MYSQL_ROOT_PASSWORD/ s/=.*/=${DBRootPassword}/' .env", '']
+                  SetDBPassword: !If 
+                  - HasDBPassword
+                  - !Sub |
+                    sed -i '/MYSQL_PASSWORD/ s/=.*/=${DBPassword}/' .env
+                    sed -i '/password/ s/:.*/: ${DBPassword}/' Autolab/config/database.yml
+                  - ''
+                  SetOrgName: !If [HasOrgName, "sed -i '/school_name/ s/\".*\"/\"${OrgName}\"/' Autolab/config/school.yml", '']
+                  SetAbbrevName: !If [HasAbbrevName, "sed -i '/school_short_name/ s/\".*\"/\"${AbbrevName}\"/' Autolab/config/school.yml", '']
+                  SetSupportEmail: !If [HasSupportEmail, "sed -i '/support_email/ s/\".*\"/\"${SupportEmail}\"/' Autolab/config/school.yml", '']
+                  SetTechEmail: !If [HasTechEmail, "sed -i '/tech_email/ s/\".*\"/\"${TechEmail}\"/' Autolab/config/school.yml", '']
+              mode: 000777
+              owner: ubuntu
+              group: ubuntu
+          commands:
+            01_configure:
+              command: su -c /tmp/configure ubuntu > /var/log/configure.log 2>&1
+              cwd: /home/ubuntu/autolab-docker
+        
+        # Sets up MySQL database and starts docker containers.
+        deploy:
+          files:
+            /tmp/create-admin.sh:
+              content:
+                !Sub |
+                RAILS_ENV=production bundle exec rails admin:create_root_user[admin@autolab.com,${ALPassword},Admin,Autolab]
+              mode: 000777
+              owner: ubuntu
+              group: ubuntu
+            /tmp/renew-cert-cronjob:
+              content:
+                !Sub |
+                0 0 1 * * docker compose run --rm --entrypoint "certbot renew --force-renew" certbot
+              mode: 000777
+              owner: ubuntu
+              group: ubuntu
+            /tmp/deploy:
+              content:
+                !Sub 
+                - |
+                  #!/bin/bash                             
+                  docker compose build
+                  docker compose up -d
+                  make set-perms
+                  make db-migrate
+                  docker cp /tmp/create-admin.sh autolab:/home/app/webapp/bin
+                  docker exec autolab bash /home/app/webapp/bin/create-admin.sh                 
+                  ${EnableSSL}
+                  docker compose up -d
+                - EnableSSL: !If 
+                  - HasDomainName
+                  - |
+                    sudo apt install at
+                    sudo chown -R ubuntu:ubuntu ssl
+                    echo "./ssl/init-letsencrypt.sh; docker compose up -d" | at now + 3 minutes
+                    crontab /tmp/renew-cert-cronjob
+                  - ''
+              mode: 000777
+              owner: ubuntu
+              group: ubuntu
+          commands:
+            01_deploy:
+              command: su -c /tmp/deploy ubuntu > /var/log/deploy.log 2>&1
+              cwd: /home/ubuntu/autolab-docker
+        
+        # Cleans leftover files created during instance setup. 
+        clean:
+          files:
+            /tmp/clean:
+              content:
+                !Sub |
+                #!/bin/bash                             
+                rm -rf /home/ubuntu/aws-cfn-bootstrap*
+                rm -f /tmp/configure /tmp/create-admin.sh /tmp/renew-cert-cronjob /tmp/deploy
+                rm -f /var/log/configure.log /var/log/deploy.log
+                rm -f -- $0
+              mode: 000777
+              owner: root
+              group: root
+          commands:
+            01_clean:
+              command: /tmp/clean
+
+    # Defines the region, image, and instance type of the EC2 instance.
+    # Builds the `cfn-init` and `cfn-signal` scripts used for setting up the instance.
+    # Notifies CloudFormation when the instance is ready to be used. 
+    Properties:
+      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", ImageId]
+      InstanceType: t3.medium
+      SecurityGroups: 
+        - !Ref AutolabSecurityGroup
+      KeyName: !Ref KeyName
+      UserData:
+        Fn::Base64:
+          !Sub |
+          #!/bin/bash -xe
+          apt-get update -y
+          cd /home/ubuntu
+          wget https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-py3-2.0-21.tar.gz
+          tar xvf aws-cfn-bootstrap-py3-2.0-21.tar.gz
+          (cd aws-cfn-bootstrap-2.0; python3 setup.py build; python3 setup.py install)
+          cfn-init -v -s ${AWS::StackName} -r Autolab -c setup --region ${AWS::Region}
+          cfn-signal -e $? --stack ${AWS::StackName} --resource Autolab --region ${AWS::Region}
+
+    # The instance will terminate itself if it does not complete setup in 30 minutes.
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT30M
+
+  # Creates an AWS security group that firewalls the EC2 instance.
+  AutolabSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable HTTP and SSH 
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref AllowedIPs
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+  
+  AutolabEIPAssociation:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      InstanceId: !Ref Autolab
+      EIP: !Ref ElasticIP
+
+# Information exported by the CloudFormation Stack,
+# Found under the `Outputs` tab.
+Outputs:
+  AutolabURL:
+    Description: Autolab URL
+    Value: !If [HasDomainName, !Sub 'https://${DomainName}', !Sub ['http://${IPAddress}', IPAddress: !GetAtt Autolab.PublicIp]]
+  LoginEmail:
+    Description: Autolab Login Email
+    Value: admin@autolab.com
+  MySQLUser:
+    Description: Non-root Database Username
+    Value: user

@@ -1,0 +1,121 @@
+---
+# CloudFormation template for creating Autolab AMIs.
+# Includes a KeyName and SecurityGroup for debugging.
+# The only necessary component is the EC2 instance.
+Parameters:
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    AllowedPattern: ".+"
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+
+Resources:
+  # Creates an AWS EC2 instance. 
+  Autolab:
+    Type: AWS::EC2::Instance
+    Metadata:
+      # Defines commands for the `cfn-init` script to run at instance setup.
+      AWS::CloudFormation::Init:
+        # Orders processing of configuration keys.
+        configSets:
+          setup:
+            - install
+            - build
+            - clean
+
+        # Installs docker and make, and clones the repository.
+        install:
+          files:
+            /tmp/install:
+              content:
+                !Sub |
+                #!/bin/bash 
+                curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+                echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+                apt-get update -y
+                apt-get upgrade -y
+                apt-get install -y make docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+                usermod -aG docker ubuntu
+                su -c "git clone --recurse-submodules -j8 https://github.com/autolab/docker.git autolab-docker" ubuntu
+              mode: 000777
+              owner: root
+              group: root
+          commands:
+            01_install:
+              command: /tmp/install > /var/log/install.log 2>&1
+              cwd: /home/ubuntu
+           
+        # Builds docker containers.
+        build:
+          files:
+            /tmp/build:
+              content:
+                !Sub |
+                #!/bin/bash
+                make update
+                make
+                sed -i '/DOCKER_TANGO_HOST_VOLUME_PATH/ s/=.*/=\/home\/ubuntu\/autolab-docker\/Tango\/volumes/' .env                           
+                docker compose build
+                docker build -t autograding_image Tango/vmms/
+              mode: 000777
+              owner: ubuntu
+              group: ubuntu
+          commands:
+            01_build:
+              command: su -c /tmp/build ubuntu > /var/log/build.log 2>&1
+              cwd: /home/ubuntu/autolab-docker
+        
+        # Cleans leftover files created during instance setup. 
+        clean:
+          files:
+            /tmp/clean:
+              content:
+                !Sub |
+                #!/bin/bash                             
+                rm -rf /home/ubuntu/aws-cfn-bootstrap*
+                rm -f /tmp/install /tmp/configure /tmp/build
+                rm -f /var/log/install.log /var/log/configure.log /var/log/build.log
+                rm -f -- $0
+              mode: 000777
+              owner: root
+              group: root
+          commands:
+            01_clean:
+              command: /tmp/clean
+
+    # Defines the region, image, and instance type of the EC2 instance.
+    # Builds the `cfn-init` and `cfn-signal` scripts used for setting up the instance.
+    # Notifies CloudFormation when the instance is ready to be used. 
+    Properties:
+      AvailabilityZone: us-east-1a
+      ImageId: ami-0557a15b87f6559cf
+      InstanceType: t3a.medium
+      SecurityGroups: 
+        - !Ref AutolabSecurityGroup
+      KeyName: !Ref KeyName
+      UserData:
+        Fn::Base64:
+          !Sub |
+          #!/bin/bash -xe
+          apt-get update -y
+          cd /home/ubuntu
+          wget https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-py3-2.0-21.tar.gz
+          tar xvf aws-cfn-bootstrap-py3-2.0-21.tar.gz
+          (cd aws-cfn-bootstrap-2.0; python3 setup.py build; python3 setup.py install)
+          cfn-init -v -s ${AWS::StackName} -r Autolab -c setup --region ${AWS::Region}
+          cfn-signal -e $? --stack ${AWS::StackName} --resource Autolab --region ${AWS::Region}
+
+    # The instance will terminate itself if it does not complete setup in 30 minutes.
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT30M
+
+  # Creates an AWS security group that firewalls the EC2 instance.
+  AutolabSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH 
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
