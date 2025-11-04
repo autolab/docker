@@ -38,6 +38,8 @@ pipeline {
                 sh 'docker stop redis || true && docker rm redis || true'
                 sh 'docker stop mysql || true && docker rm mysql || true'
                 sh 'docker stop certbot || true && docker rm certbot || true'
+                // add google analytics ID to Nightly
+                sh 'python3 ci_script.py -g ./Autolab/config/environments/production.rb'
                 sh 'docker compose build'
             }
         }
