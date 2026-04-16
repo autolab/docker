@@ -63,6 +63,9 @@ services:
       # Comment the below out to disable SSL (not recommended)
       - ./nginx/app.conf:/etc/nginx/sites-enabled/webapp.conf
 
+      # The line below bridges the Docker Wall for filesystem permissions
+      - /etc/group:/etc/group:ro
+
       # Uncomment the below to disable SSL (not recommended)
       # - ./nginx/no-ssl-app.conf:/etc/nginx/sites-enabled/webapp.conf
 
@@ -76,6 +79,9 @@ services:
       - SECRET_KEY_BASE
       - LOCKBOX_MASTER_KEY
       - DEVISE_SECRET_KEY
+      - UNIX_OPS_DELEGATE_URL=http://unixops:4000
+      - UNIX_OPS_SHARED_SECRET=${UNIX_OPS_SHARED_SECRET?err}
+      - HOST_COURSES_PATH=/home/autolab/autolab-docker/Autolab/courses
 
   mysql:
     container_name: mysql
@@ -97,5 +103,28 @@ services:
       - ./ssl/certbot/conf:/etc/letsencrypt
       - ./ssl/certbot/www:/var/www/certbot
 
+  unixops:
+    container_name: unixops
+    build: ./Autolab
+    command: bundle exec ruby script/unix_ops_daemon.rb -p 4000
+    environment:
+      - RAILS_ENV=production
+      - UNIX_OPS_SHARED_SECRET=${UNIX_OPS_SHARED_SECRET?err}
+      - HOST_COURSES_PATH=/home/autolab/autolab-docker/Autolab/courses
+    user: "0:0"
+    privileged: true
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
+      - FSETID
+      - DAC_READ_SEARCH
+    volumes:
+      - ./Autolab:/home/app/webapp
+      - /etc:/etc:rw
+      - /home:/home:rw
+      - /var:/var:rw
 volumes:
   mysql-db:
