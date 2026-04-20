@@ -81,7 +81,7 @@ services:
       - DEVISE_SECRET_KEY
       - UNIX_OPS_DELEGATE_URL=http://unixops:4000
       - UNIX_OPS_SHARED_SECRET=${UNIX_OPS_SHARED_SECRET?err}
-      - HOST_COURSES_PATH=/home/autolab/autolab-docker/Autolab/courses
+      - AUTOLAB_HOST_COURSES_ROOT=/home/ubuntu/autolab-docker/Autolab/courses
 
   mysql:
     container_name: mysql
