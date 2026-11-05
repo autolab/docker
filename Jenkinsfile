@@ -103,7 +103,19 @@ pipeline {
                 script {
                     if (env.STARTED_BY_UPSTREAM_BUILD.toBoolean()) {
                         echo 'Started by upstream build, deploying docs...'
-                        sh 'cd Autolab && sudo mkdocs gh-deploy --no-history'
+                        sh '''
+                            build_dir=$(mktemp -d)
+                            trap 'rm -rf "$build_dir"' EXIT
+                            git clone https://github.com/autolab/autolab-wiki.git "$build_dir/wiki"
+                            sed -i 's#https://autolab.github.io/autolab-wiki/#https://docs.autolabproject.com/developer/#' "$build_dir/wiki/mkdocs.yml"
+                            sed -i '/^extra_javascript:/,+1d' "$build_dir/wiki/mkdocs.yml"
+                            python3 -m venv "$build_dir/venv"
+                            "$build_dir/venv/bin/pip" install mkdocs-material mkdocs-mermaid2-plugin mkdocs-git-revision-date-localized-plugin
+                            "$build_dir/venv/bin/mkdocs" build -f Autolab/mkdocs.yml -d "$build_dir/site"
+                            "$build_dir/venv/bin/mkdocs" build -f "$build_dir/wiki/mkdocs.yml" -d "$build_dir/site/developer"
+                            cd Autolab
+                            sudo "$build_dir/venv/bin/ghp-import" --no-jekyll --push --force --no-history "$build_dir/site"
+                        '''
                     } else {
                         echo 'Not started by upstream build, not deploying docs...'
                     }
